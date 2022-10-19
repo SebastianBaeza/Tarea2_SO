@@ -1,7 +1,7 @@
-all:Tarea2_Main
+all:tarea_2
 
-Tarea2_Main:Tarea2_Main.c
-	gcc -Wall -o Tarea2_Main.out Tarea2_Main.c && ./Tarea2_Main.out
+tarea_2:tarea_2.c
+	gcc -Wall -o tarea_2.out tarea_2.c && ./tarea_2.out
 
 .PHONY: clean
 clean:
