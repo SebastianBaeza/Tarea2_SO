@@ -1,0 +1,15 @@
+Sebastián Baeza Avello      202073538-7     Paralelo 200
+Daniela Sanchez Nizza       202011563-k     Paralelo 201
+
+*---------------------------------*
+
+Tarea2_Main.c: Resuelve el problema (Jugar dominó)
+
+*---------------------------------*
+
+Para compilar:
+    -Escribir en la consola de comandos, en la carpeta de los archivos:
+         make
+     Esto para ejecutar el archivo
+    -Para borrar los archivos de ejecución, escribir:
+         make clean
