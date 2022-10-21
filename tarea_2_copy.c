@@ -28,16 +28,21 @@ struct colocar{
 };
 //quiero rellenar los mazos de los jugadores, el random es para que me de un numero del 0 al 27 para rellenar el mazo con la pieza
 //en la posición del numero del arreglo piezas
-void crear_piezas(struct mazo *jugador){
+int crear_piezas(struct mazo *jugador){
     int posicion = 0;
     int numero=0;
     int flag=0;
+    int mayor=0;
+    int suma=0;
     srand(time(NULL));
     while (flag==0){
         posicion = rand() % 27; //cambiar a 27
-        printf("%d", posicion);
         if (piezas[posicion][0]==-1){
             continue;
+        }
+        suma=piezas[posicion][0]+piezas[posicion][1];
+        if (suma>mayor){
+            mayor=suma;
         }
         else if (numero==0) {
             jugador->pieza1[0] = piezas[posicion][0];
@@ -81,14 +86,18 @@ void crear_piezas(struct mazo *jugador){
             piezas[posicion][0]=-1;
             numero+=1;
             flag=1;
+            return mayor;
         }
 
     }
 }
 
+
 int main(){
     struct mazo p1;
-    crear_piezas(&p1);
+    int mayor;
+    mayor=crear_piezas(&p1);
+    printf("%d\n",mayor);
     printf("Creado el mazo1\n");
     printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
     printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
