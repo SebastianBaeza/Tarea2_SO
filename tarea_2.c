@@ -96,8 +96,6 @@ int crear_piezas(struct mazo *jugador){
 
 
 int main(){
-    struct mazo p1;
-    int mayor = crear_piezas(&p1);
     // printf("%d\n",mayor);
     // printf("Creado el mazo1\n");
     // printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
@@ -109,10 +107,67 @@ int main(){
     // printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
     int pipeP1[2], pipeP2[2], pipeP3[2], pipeP4[2];
     int pipe1P[2], pipe2P[2], pipe3P[2], pipe4P[2];
-    int pipe12[2], pipe21[2];
-    int pipe23[2], pipe32[2];
-    int pipe34[2], pipe43[2];
-    int pipe41[2], pipe14[2];
+    int pipe12[2];
+    int pipe23[2];
+    int pipe34[2];
+    int pipe41[2];
+
+    pipe(pipeP1);
+    pipe(pipeP2);
+    pipe(pipeP3);
+    pipe(pipeP4);
+    pipe(pipe1P);
+    pipe(pipe2P);
+    pipe(pipe3P);
+    pipe(pipe4P);
+    pipe(pipe12);
+    pipe(pipe23);
+    pipe(pipe34);
+    pipe(pipe41);
+
+    int flag = 0;
+    
+    //J1
+    int J1 = fork();
+    if (J1 == 0) {
+        struct mazo p1;
+        int mayor = crear_piezas(&p1);
+        while (flag == 0){
+            //poner codigo aca
+        } 
+    } else {
+        //J2
+        int J2 = fork();
+        if (J2 == 0) {
+            struct mazo p2;
+            int mayor = crear_piezas(&p2);
+            while (flag == 0){
+                //poner codigo aca
+            } 
+        } else {
+            //J3
+            int J3 = fork();
+            if (J3 == 0) {
+                struct mazo p3;
+                int mayor = crear_piezas(&p3);
+                while (flag == 0){
+                    //poner codigo aca
+                } 
+            } else {
+                //J4
+                int J4 = fork();
+                if (J4 == 0) {
+                    struct mazo p4;
+                    int mayor = crear_piezas(&p4);
+                    while (flag == 0){
+                        //poner codigo aca
+                    } 
+                }
+            }
+        }
+    }
+
+
 
     return 0;
 }
