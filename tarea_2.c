@@ -97,17 +97,22 @@ int crear_piezas(struct mazo *jugador){
 
 int main(){
     struct mazo p1;
-    int mayor;
-    mayor = crear_piezas(&p1);
-    printf("%d\n",mayor);
-    printf("Creado el mazo1\n");
-    printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
-    printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
-    printf("%d, %d\n", p1.pieza3[0], p1.pieza3[1]);
-    printf("%d, %d\n", p1.pieza4[0], p1.pieza4[1]);
-    printf("%d, %d\n", p1.pieza5[0], p1.pieza5[1]);
-    printf("%d, %d\n", p1.pieza6[0], p1.pieza6[1]);
-    printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
+    int mayor = crear_piezas(&p1);
+    // printf("%d\n",mayor);
+    // printf("Creado el mazo1\n");
+    // printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
+    // printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
+    // printf("%d, %d\n", p1.pieza3[0], p1.pieza3[1]);
+    // printf("%d, %d\n", p1.pieza4[0], p1.pieza4[1]);
+    // printf("%d, %d\n", p1.pieza5[0], p1.pieza5[1]);
+    // printf("%d, %d\n", p1.pieza6[0], p1.pieza6[1]);
+    // printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
+    int pipeP1[2], pipeP2[2], pipeP3[2], pipeP4[2];
+    int pipe1P[2], pipe2P[2], pipe3P[2], pipe4P[2];
+    int pipe12[2], pipe21[2];
+    int pipe23[2], pipe32[2];
+    int pipe34[2], pipe43[2];
+    int pipe41[2], pipe14[2];
 
     return 0;
 }
