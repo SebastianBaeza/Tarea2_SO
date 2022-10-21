@@ -130,8 +130,11 @@ int main(){
     //J1
     int J1 = fork();
     if (J1 == 0) {
+        close(pipeP1[1]);// cierro el modo de Escritura del padre al hijo
+        close(pipe1P[0]);// cierro el modo de Lectura del hijo al padre
         struct mazo p1;
-        int mayor = crear_piezas(&p1);
+        int mayor1 = crear_piezas(&p1);
+        write(pipe1P[1], &mayor1, sizeof(int));
         while (flag == 0){
             //poner codigo aca
         } 
@@ -139,8 +142,11 @@ int main(){
         //J2
         int J2 = fork();
         if (J2 == 0) {
+            close(pipeP2[1]);// cierro el modo de Escritura del padre al hijo
+            close(pipe2P[0]);// cierro el modo de Lectura del hijo al padre
             struct mazo p2;
-            int mayor = crear_piezas(&p2);
+            int mayor2 = crear_piezas(&p2);
+            write(pipe1P[1], &mayor2, sizeof(int));
             while (flag == 0){
                 //poner codigo aca
             } 
@@ -148,8 +154,11 @@ int main(){
             //J3
             int J3 = fork();
             if (J3 == 0) {
+                close(pipeP3[1]);// cierro el modo de Escritura del padre al hijo
+                close(pipe3P[0]);// cierro el modo de Lectura del hijo al padre
                 struct mazo p3;
-                int mayor = crear_piezas(&p3);
+                int mayor3 = crear_piezas(&p3);
+                write(pipe3P[1], &mayor3, sizeof(int));
                 while (flag == 0){
                     //poner codigo aca
                 } 
@@ -157,8 +166,11 @@ int main(){
                 //J4
                 int J4 = fork();
                 if (J4 == 0) {
+                    close(pipeP4[1]);// cierro el modo de Escritura del padre al hijo
+                    close(pipe4P[0]);// cierro el modo de Lectura del hijo al padre
                     struct mazo p4;
-                    int mayor = crear_piezas(&p4);
+                    int mayor4 = crear_piezas(&p4);
+                    write(pipe4P[1], &mayor4, sizeof(int));
                     while (flag == 0){
                         //poner codigo aca
                     } 
@@ -166,8 +178,24 @@ int main(){
             }
         }
     }
+    
+    int mayor1, mayor2, mayor3, mayor4;
 
+    close(pipeP1[0]);// cierro el modo de Lectura del padre al hijo
+    close(pipe1P[1]);// cierro el modo de Escritura del hijo al padre
+    read(pipe1P[0], &mayor1, sizeof(int));
 
+    close(pipeP2[0]);// cierro el modo de Lectura del padre al hijo
+    close(pipe2P[1]);// cierro el modo de Escritura del hijo al padre
+    read(pipe2P[0], &mayor2, sizeof(int));
+
+    close(pipeP3[0]);// cierro el modo de Lectura del padre al hijo
+    close(pipe3P[1]);// cierro el modo de Escritura del hijo al padre
+    read(pipe3P[0], &mayor3, sizeof(int));
+
+    close(pipeP4[0]);// cierro el modo de Lectura del padre al hijo
+    close(pipe4P[1]);// cierro el modo de Escritura del hijo al padre
+    read(pipe4P[0], &mayor4, sizeof(int));
 
     return 0;
 }
