@@ -138,6 +138,16 @@ int main(){
         close(pipe1P[0]);// cierro el modo de Lectura del hijo al padre
         struct mazo p1;
         int mayor1 = crear_piezas(&p1);
+
+        printf("Creado el mazo\n");
+        printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
+        printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
+        printf("%d, %d\n", p1.pieza3[0], p1.pieza3[1]);
+        printf("%d, %d\n", p1.pieza4[0], p1.pieza4[1]);
+        printf("%d, %d\n", p1.pieza5[0], p1.pieza5[1]);
+        printf("%d, %d\n", p1.pieza6[0], p1.pieza6[1]);
+        printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
+
         write(pipe1P[1], &mayor1, sizeof(int));
         // while (flag == 0){
         //     //poner codigo aca
@@ -151,6 +161,16 @@ int main(){
             close(pipe2P[0]);// cierro el modo de Lectura del hijo al padre
             struct mazo p2;
             int mayor2 = crear_piezas(&p2);
+
+            printf("Creado el mazo\n");
+            printf("%d, %d\n", p2.pieza1[0], p2.pieza1[1]);
+            printf("%d, %d\n", p2.pieza2[0], p2.pieza2[1]);
+            printf("%d, %d\n", p2.pieza3[0], p2.pieza3[1]);
+            printf("%d, %d\n", p2.pieza4[0], p2.pieza4[1]);
+            printf("%d, %d\n", p2.pieza5[0], p2.pieza5[1]);
+            printf("%d, %d\n", p2.pieza6[0], p2.pieza6[1]);
+            printf("%d, %d\n", p2.pieza7[0], p2.pieza7[1]);
+
             write(pipe1P[1], &mayor2, sizeof(int));
             // while (flag == 0){
             //     //poner codigo aca
@@ -164,6 +184,16 @@ int main(){
                 close(pipe3P[0]);// cierro el modo de Lectura del hijo al padre
                 struct mazo p3;
                 int mayor3 = crear_piezas(&p3);
+
+                printf("Creado el mazo\n");
+                printf("%d, %d\n", p3.pieza1[0], p3.pieza1[1]);
+                printf("%d, %d\n", p3.pieza2[0], p3.pieza2[1]);
+                printf("%d, %d\n", p3.pieza3[0], p3.pieza3[1]);
+                printf("%d, %d\n", p3.pieza4[0], p3.pieza4[1]);
+                printf("%d, %d\n", p3.pieza5[0], p3.pieza5[1]);
+                printf("%d, %d\n", p3.pieza6[0], p3.pieza6[1]);
+                printf("%d, %d\n", p3.pieza7[0], p3.pieza7[1]);
+
                 write(pipe3P[1], &mayor3, sizeof(int));
                 // while (flag == 0){
                 //     //poner codigo aca
@@ -177,6 +207,16 @@ int main(){
                     close(pipe4P[0]);// cierro el modo de Lectura del hijo al padre
                     struct mazo p4;
                     int mayor4 = crear_piezas(&p4);
+
+                    printf("Creado el mazo\n");
+                    printf("%d, %d\n", p4.pieza1[0], p4.pieza1[1]);
+                    printf("%d, %d\n", p4.pieza2[0], p4.pieza2[1]);
+                    printf("%d, %d\n", p4.pieza3[0], p4.pieza3[1]);
+                    printf("%d, %d\n", p4.pieza4[0], p4.pieza4[1]);
+                    printf("%d, %d\n", p4.pieza5[0], p4.pieza5[1]);
+                    printf("%d, %d\n", p4.pieza6[0], p4.pieza6[1]);
+                    printf("%d, %d\n", p4.pieza7[0], p4.pieza7[1]);
+
                     write(pipe4P[1], &mayor4, sizeof(int));
                     // while (flag == 0){
                     //     //poner codigo aca
