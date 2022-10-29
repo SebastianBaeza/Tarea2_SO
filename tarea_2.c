@@ -97,7 +97,7 @@ int crear_piezas(struct mazo *jugador){
 
 int main(){
     // printf("%d\n",mayor);
-    // printf("Creado el mazo1\n");
+    // printf("Creado el mazo\n");
     // printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
     // printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
     // printf("%d, %d\n", p1.pieza3[0], p1.pieza3[1]);
@@ -107,10 +107,10 @@ int main(){
     // printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
     int pipeP1[2], pipeP2[2], pipeP3[2], pipeP4[2];
     int pipe1P[2], pipe2P[2], pipe3P[2], pipe4P[2];
-    int pipe12[2];
-    int pipe23[2];
-    int pipe34[2];
-    int pipe41[2];
+    // int pipe12[2];
+    // int pipe23[2];
+    // int pipe34[2];
+    // int pipe41[2];
 
     pipe(pipeP1);
     pipe(pipeP2);
@@ -120,82 +120,96 @@ int main(){
     pipe(pipe2P);
     pipe(pipe3P);
     pipe(pipe4P);
-    pipe(pipe12);
-    pipe(pipe23);
-    pipe(pipe34);
-    pipe(pipe41);
-
+    // pipe(pipe12);
+    // pipe(pipe23);
+    // pipe(pipe34);
+    // pipe(pipe41);
+    int J1;
+    int J2 = -1;
+    int J3 = -1;
+    int J4 = -1;
     int flag = 0;
     
-    //J1
-    int J1 = fork();
+    //J1: Jugador 1, manual
+    J1 = fork();
     if (J1 == 0) {
+        printf("Entrando al proceso hijo: J1\n");
         close(pipeP1[1]);// cierro el modo de Escritura del padre al hijo
         close(pipe1P[0]);// cierro el modo de Lectura del hijo al padre
         struct mazo p1;
         int mayor1 = crear_piezas(&p1);
         write(pipe1P[1], &mayor1, sizeof(int));
-        while (flag == 0){
-            //poner codigo aca
-        } 
+        // while (flag == 0){
+        //     //poner codigo aca
+        // } 
     } else {
-        //J2
-        int J2 = fork();
+        //J2: Jugador 2, PC
+        J2 = fork();
         if (J2 == 0) {
+            printf("Entrando al proceso hijo: J2\n");
             close(pipeP2[1]);// cierro el modo de Escritura del padre al hijo
             close(pipe2P[0]);// cierro el modo de Lectura del hijo al padre
             struct mazo p2;
             int mayor2 = crear_piezas(&p2);
             write(pipe1P[1], &mayor2, sizeof(int));
-            while (flag == 0){
-                //poner codigo aca
-            } 
+            // while (flag == 0){
+            //     //poner codigo aca
+            // } 
         } else {
-            //J3
-            int J3 = fork();
+            //J3: Jugador 3, PC
+            J3 = fork();
             if (J3 == 0) {
+                printf("Entrando al proceso hijo: J3\n");
                 close(pipeP3[1]);// cierro el modo de Escritura del padre al hijo
                 close(pipe3P[0]);// cierro el modo de Lectura del hijo al padre
                 struct mazo p3;
                 int mayor3 = crear_piezas(&p3);
                 write(pipe3P[1], &mayor3, sizeof(int));
-                while (flag == 0){
-                    //poner codigo aca
-                } 
+                // while (flag == 0){
+                //     //poner codigo aca
+                // } 
             } else {
-                //J4
-                int J4 = fork();
+                //J4: Jugador 4, PC
+                J4 = fork();
                 if (J4 == 0) {
+                    printf("Entrando al proceso hijo: J4\n");
                     close(pipeP4[1]);// cierro el modo de Escritura del padre al hijo
                     close(pipe4P[0]);// cierro el modo de Lectura del hijo al padre
                     struct mazo p4;
                     int mayor4 = crear_piezas(&p4);
                     write(pipe4P[1], &mayor4, sizeof(int));
-                    while (flag == 0){
-                        //poner codigo aca
-                    } 
+                    // while (flag == 0){
+                    //     //poner codigo aca
+                    // } 
                 }
             }
         }
     }
     
-    int mayor1, mayor2, mayor3, mayor4;
+    if (J1 != 0 && J2 != 0 && J3 != 0 && J4 != 0){
+        printf("Dentro del proceso padre\n");
 
-    close(pipeP1[0]);// cierro el modo de Lectura del padre al hijo
-    close(pipe1P[1]);// cierro el modo de Escritura del hijo al padre
-    read(pipe1P[0], &mayor1, sizeof(int));
+        int mayor1, mayor2, mayor3, mayor4;
 
-    close(pipeP2[0]);// cierro el modo de Lectura del padre al hijo
-    close(pipe2P[1]);// cierro el modo de Escritura del hijo al padre
-    read(pipe2P[0], &mayor2, sizeof(int));
+        close(pipeP1[0]);// cierro el modo de Lectura del padre al hijo
+        close(pipe1P[1]);// cierro el modo de Escritura del hijo al padre
+        read(pipe1P[0], &mayor1, sizeof(int));
+        printf("Mayor de J1: %d\n",mayor1);
 
-    close(pipeP3[0]);// cierro el modo de Lectura del padre al hijo
-    close(pipe3P[1]);// cierro el modo de Escritura del hijo al padre
-    read(pipe3P[0], &mayor3, sizeof(int));
+        close(pipeP2[0]);// cierro el modo de Lectura del padre al hijo
+        close(pipe2P[1]);// cierro el modo de Escritura del hijo al padre
+        read(pipe2P[0], &mayor2, sizeof(int));
+        printf("Mayor de J2: %d\n",mayor2);
 
-    close(pipeP4[0]);// cierro el modo de Lectura del padre al hijo
-    close(pipe4P[1]);// cierro el modo de Escritura del hijo al padre
-    read(pipe4P[0], &mayor4, sizeof(int));
+        close(pipeP3[0]);// cierro el modo de Lectura del padre al hijo
+        close(pipe3P[1]);// cierro el modo de Escritura del hijo al padre
+        read(pipe3P[0], &mayor3, sizeof(int));
+        printf("Mayor de J3: %d\n",mayor3);
 
+        close(pipeP4[0]);// cierro el modo de Lectura del padre al hijo
+        close(pipe4P[1]);// cierro el modo de Escritura del hijo al padre
+        read(pipe4P[0], &mayor4, sizeof(int));
+        printf("Mayor de J4: %d\n",mayor4);
+    }
     return 0;
 }
