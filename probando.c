@@ -131,7 +131,7 @@ int main(){
             continue;
         } else {
             pos[a] = var;
-            printf("Arreglo de posiciones, espacio %d = %d\n", a, pos[a]);
+            // printf("Arreglo de posiciones, espacio %d = %d\n", a, pos[a]);
             a++;
         }
     }
@@ -191,18 +191,18 @@ int main(){
         }
     }
     //intento que interactuen entre sí los procesos, mas tarde lo extiendo a los otros$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    for (int i = 1; i < 8; i++){
+    for (int i = 1; i < 2; i++){
         //if del proceso padre con whiles para cada hijo vrible que aumenta si todos juegan +1 
         if (proceso == 1){
             close(pipe_p1[0]); // cierro el modo de Lectura del padre al hijo
             close(pipe_1p[1]); // cierro el modo de Escritura del hijo al padre
 
-            int pos1[8];
+            int pos1[7];
             memcpy(pos1,pos,sizeof(int)*7);
 
-            crear_piezas(&p1, &pos1);
+            crear_piezas(&p1, pos1);
 
-            printf("Creado el mazo\n");
+            printf("Creado el mazo del Jugador 1\n");
             printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
             printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
             printf("%d, %d\n", p1.pieza3[0], p1.pieza3[1]);
@@ -211,21 +211,34 @@ int main(){
             printf("%d, %d\n", p1.pieza6[0], p1.pieza6[1]);
             printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
 
-
             int mensaje = i * 100;
             write(pipe_p1[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             read(pipe_1p[0], &mensaje, sizeof(int));
 
-            printf("la respuesta de mi hijo es: %d \n", mensaje);
-            }
-            //juegue
-        if (proceso == 2){
+            // printf("la respuesta de mi hijo es: %d \n", mensaje);
+            // juegue
+        } else if (proceso == 2){
             //juego
             close(pipe_p1[1]); // cierro el modo de Escritura del padre al hijo
             close(pipe_1p[0]); // cierro el modo de Lectura del hijo al padre
 
             int mensaje;
             read(pipe_p1[0], &mensaje, sizeof(int));
+
+            int pos2[7];
+            memcpy(pos2,pos + 8,sizeof(int)*7);
+
+            crear_piezas(&p1, pos2);
+
+            printf("Creado el mazo del Jugador 2\n");
+            printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
+            printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
+            printf("%d, %d\n", p1.pieza3[0], p1.pieza3[1]);
+            printf("%d, %d\n", p1.pieza4[0], p1.pieza4[1]);
+            printf("%d, %d\n", p1.pieza5[0], p1.pieza5[1]);
+            printf("%d, %d\n", p1.pieza6[0], p1.pieza6[1]);
+            printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
+
             mensaje = mensaje * 2;
             write(pipe_1p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del hijo al padre
             //juegue
