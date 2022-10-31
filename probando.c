@@ -27,23 +27,17 @@ struct colocar{
     int piezaizq[2];
 };
 //quiero rellenar los mazos de los jugadores, el random es para que me de un numero del 0 al 27 para rellenar el mazo con la pieza
+//tablero dentro de pipe
 //en la posición del numero del arreglo piezas
-int crear_piezas(struct mazo *jugador){
+void crear_piezas(struct mazo *jugador){
     int posicion = 0;
     int numero = 0;
     int flag = 0;
-    int mayor = 0;
-    int suma = 0;
     srand(time(NULL));
     while (flag == 0){
         posicion = rand() % 27; //cambiar a 27
         if (piezas[posicion][0] == -1){
             continue;
-        }
-        suma = piezas[posicion][0] + piezas[posicion][1];
-        if (suma > mayor){
-            printf("Mayor actual: %d, %d\n", piezas[posicion][0], piezas[posicion][1]);
-            mayor = suma;
         }
         if (numero == 0) {
             jugador->pieza1[0] = piezas[posicion][0];
@@ -86,20 +80,49 @@ int crear_piezas(struct mazo *jugador){
             jugador->pieza7[1] = piezas[posicion][1];
             piezas[posicion][0] = -1;
             numero++;
-            // flag = 1;
-            return mayor;
+            flag = 1;
         }
 
     }
-    return mayor;
 }
 
 
 int main(){
-        int pid, pid1, pid2, pid3;
-        int pidp, pidc1, pidc2, pidc3;
+    int proceso;
+    int pid, pid1, pid2, pid3, pid4;
+            //Crear las PIPES [0]: Lectura [1]: Escritura
+    int pipe_p1[2];
+    int pipe_1p[2];
+    int pipe_p2[2];
+    int pipe_2p[2];
+    int pipe_p3[2];
+    int pipe_3p[2];
+    int pipe_p4[2];
+    int pipe_4p[2];
+    int* ptr = (int*)malloc(4 * sizeof(int));
+    ptr[0]=0;
+    ptr[1]=0;
+    ptr[2]=0;
+    ptr[3]=0;
+
+    //Inicializar PIPES
+    pipe(pipe_p1);
+    pipe(pipe_1p);
+    pipe(pipe_p2);
+    pipe(pipe_2p);
+    pipe(pipe_p3);
+    pipe(pipe_3p);
+    pipe(pipe_p4);
+    pipe(pipe_4p);
+
   
-    // variable pid will store the
+    // los mazos$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    struct mazo jugador1;
+    struct mazo jugador2;
+    struct mazo jugador3;
+    struct mazo jugador4;
+
+//hago los procesos$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     // value returned from fork() system call
     pid = fork();
   
@@ -116,51 +139,72 @@ int main(){
         // getpid() gives the process
         // id and getppid() gives the
         // parent id of that process.
-        pidp=getppid();
-        pidc1=getpid();
+        proceso=0;
+
+        
         
     }
   
     else {
         pid1 = fork();
         if (pid1 == 0) {
-            pidc2=getpid();
+            proceso=1;
+            //idem x=2;
 
         }
         else {
             pid2 = fork();
             if (pid2 == 0) {
-                pidc3=getpid();
+                proceso=2;
             }
+            else{
+                pid3 = fork();
+                if (pid3 == 0) {
+                    proceso=3;
+                }
+                else{
+                    pid4 = fork();
+                if (pid4 == 0) {
+                    proceso=4;
+                }
+                    proceso=4;
+                }
+            
   
             // If value returned from fork()
             // in not zero and >0 that means
             // this is parent process.
         }
     }
-    int i;
-    char n;
-    int j=1;
-    int fd[2];
-    pipe(fd);
-    char* data="2";
-    char buf[1];
-    write(fd[1], data, strlen(data));
-    for (i=1;i<8;i++){
-        read(fd[0], buf, sizeof(buf));
-        if(getpid()==pidc1&& buf=="2"){
-            //juego
-            data="1";
-            write(fd[1], data, strlen(data));
-            printf("juego yo");
-        }
-        if(getpid()==pidc2&& buf=="1"){
-            //juego
-            j=1;
-            printf("ahora yo");
-        }
-
     }
-    printf("a");
+    int i;
+//intento que interactuen entre sí los procesos, mas tarde lo extiendo a los otros$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+    for (i=1;i<8;i++){
+        //if del proceso padre con whiles para cada hijo vrible que aumenta si todos juegan +1 
+        if(proceso==1){
+            close(pipe_p1[0]); // cierro el modo de Lectura del padre al hijo
+            close(pipe_1p[1]); // cierro el modo de Escritura del hijo al padre
+
+            int mensaje = 100;
+            write(pipe_p1[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+            read(pipe_1p[0], &mensaje, sizeof(int));
+
+            printf("la respuesta de mi hijo es: %d \n", mensaje);
+            }
+            //juegue
+        if(proceso==2){
+            //juego
+            close(pipe_p1[1]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_1p[0]); // cierro el modo de Lectura del hijo al padre
+
+            int mensaje;
+            read(pipe_p1[0], &mensaje, sizeof(int));
+            mensaje = mensaje * 2;
+            write(pipe_1p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del hijo al padre
+            //juegue
+        }
+        //la idea es hacer pipes que comuniquen con el padre y con los hijos entre sí el read hace que esperen 
+    }
+    free(ptr);
     return 0;
 }
