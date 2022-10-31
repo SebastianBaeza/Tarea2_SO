@@ -31,6 +31,43 @@ struct colocar{
 //en la posición del numero del arreglo piezas
 //busca el numero de pieza que puede jugar izquierda y derecha representan a los numeros en el tablero retorna el numero de la pieza
 //si no encuentra retorna -1, esta función no debiese servir para partir
+int mayor_pieza(struct mazo *jugador){
+    int actual;
+    int pos=1;
+    int sum1=(jugador->pieza1[0])+(jugador->pieza1[1]);
+    actual=sum1;
+    int sum2=(jugador->pieza2[0])+(jugador->pieza2[1]);
+    if(sum2>actual){
+        actual=sum2;
+        pos=2;
+    }
+    int sum3=(jugador->pieza3[0])+(jugador->pieza3[1]);
+        if(sum3>actual){
+        actual=sum3;
+        pos=3;
+    }
+    int sum4=(jugador->pieza4[0])+(jugador->pieza4[1]);
+        if(sum4>actual){
+        actual=sum4;
+        pos=4;
+    }
+    int sum5=(jugador->pieza5[0])+(jugador->pieza5[1]);
+        if(sum5>actual){
+        actual=sum5;
+        pos=5;
+    }
+    int sum6=(jugador->pieza6[0])+(jugador->pieza6[1]);
+        if(sum6>actual){
+        actual=sum6;
+        pos=6;
+    }
+    int sum7=(jugador->pieza7[0])+(jugador->pieza7[1]);
+        if(sum7>actual){
+        actual=sum7;
+        pos=7;
+    }
+    return pos;
+}
 int jugada(struct mazo *jugador,int izquierda, int derecha){
     if(jugador->pieza1[0]==izquierda){
         return 1;
@@ -194,10 +231,10 @@ int main(){
     int pipe_4p[2];
     //el tablero
     int* ptr = (int*)malloc(4 * sizeof(int));
-    ptr[0] = 0;
-    ptr[1] = 0;
-    ptr[2] = 0;
-    ptr[3] = 0;
+    ptr[0] = -1;
+    ptr[1] = -1;
+    ptr[2] = -1;
+    ptr[3] = -1;
 
     //Inicializar PIPES
     pipe(pipe_p1);
@@ -208,14 +245,15 @@ int main(){
     pipe(pipe_3p);
     pipe(pipe_p4);
     pipe(pipe_4p);
-
+    int parte;
+    
     int pos[28];
     int var = 0;
     int check = 0;
     srand(time(NULL));
+    parte =rand()%4;
 
     int flag=0;
-    int parte= rand()%4;
 
     for (int a = 0; a < 28;){
         var = rand() % 28;
@@ -282,12 +320,13 @@ int main(){
     //intento que interactuen entre sí los procesos, mas tarde lo extiendo a los otros$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     for (int i = 1; i < 2; i++){
         //if del proceso padre con whiles para cada hijo vrible que aumenta si todos juegan +1
+        printf("parte: %d\n",parte);
         if (proceso==4){
             //este es el padre
             
             
         } 
-        if (proceso == 0||parte==0){
+        if (proceso == 0){
             close(pipe_p1[0]); // cierro el modo de Lectura del padre al hijo
             close(pipe_1p[1]); // cierro el modo de Escritura del hijo al padre
 
@@ -304,23 +343,55 @@ int main(){
             printf("%d, %d\n", p1.pieza5[0], p1.pieza5[1]);
             printf("%d, %d\n", p1.pieza6[0], p1.pieza6[1]);
             printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);
+            if (parte==0){
+                int m=mayor_pieza(&p1);
+                if (m==1){
+                    ptr[0]=p1.pieza1[0];
+                    ptr[1]=p1.pieza1[1];
+                }
+                else if (m==2){
+                    ptr[0]=p1.pieza2[0];
+                    ptr[1]=p1.pieza2[1];
+                }
+                else if (m==3){
+                    ptr[0]=p1.pieza3[0];
+                    ptr[1]=p1.pieza3[1];
+                }
+                else if (m==4){
+                    ptr[0]=p1.pieza4[0];
+                    ptr[1]=p1.pieza4[1];
+                }
+                else if (m==5){
+                    ptr[0]=p1.pieza5[0];
+                    ptr[1]=p1.pieza5[1];
+                }
+                else if (m==6){
+                    ptr[0]=p1.pieza6[0];
+                    ptr[1]=p1.pieza6[1];
+                }
+                else if (m==7){
+                    ptr[0]=p1.pieza7[0];
+                    ptr[1]=p1.pieza7[1];
+                }
 
+            }
             int mensaje = i * 100;
             write(pipe_p1[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
-            //read(pipe_1p[0], &mensaje, sizeof(int));
+            read(pipe_1p[0], &mensaje, sizeof(int));
 
             // printf("la respuesta de mi hijo es: %d \n", mensaje);
             // print del tablero
-            printf("[%d|%d][%d|%d]",ptr[0],ptr[1],ptr[2],ptr[3]);
+            
 
             parte=-1;
-        } else if (proceso == 1||parte==1){
+        }else if (proceso == 1){
+            
             //juego
             close(pipe_p1[1]); // cierro el modo de Escritura del padre al hijo
             close(pipe_1p[0]); // cierro el modo de Lectura del hijo al padre
 
-            close(pipe_p2[1]); // cierro el modo de Lectura del padre al hijo
-            close(pipe_2p[0]); // cierro el modo de Escritura del hijo al padre
+            close(pipe_p2[0]); // cierro el modo de Lectura del padre al hijo
+            close(pipe_2p[1]); // cierro el modo de Escritura del hijo al padre
 
             int mensaje;
             read(pipe_p1[0], &mensaje, sizeof(int));
@@ -338,14 +409,46 @@ int main(){
             printf("%d, %d\n", p2.pieza5[0], p2.pieza5[1]);
             printf("%d, %d\n", p2.pieza6[0], p2.pieza6[1]);
             printf("%d, %d\n", p2.pieza7[0], p2.pieza7[1]);
+            if (parte==1){
+                int m=mayor_pieza(&p2);
+                if (m==1){
+                    ptr[0]=p2.pieza1[0];
+                    ptr[1]=p2.pieza1[1];
+                }
+                else if (m==2){
+                    ptr[0]=p2.pieza2[0];
+                    ptr[1]=p2.pieza2[1];
+                }
+                else if (m==3){
+                    ptr[0]=p2.pieza3[0];
+                    ptr[1]=p2.pieza3[1];
+                }
+                else if (m==4){
+                    ptr[0]=p2.pieza4[0];
+                    ptr[1]=p2.pieza4[1];
+                }
+                else if (m==5){
+                    ptr[0]=p2.pieza5[0];
+                    ptr[1]=p2.pieza5[1];
+                }
+                else if (m==6){
+                    ptr[0]=p2.pieza6[0];
+                    ptr[1]=p2.pieza6[1];
+                }
+                else if (m==7){
+                    ptr[0]=p2.pieza7[0];
+                    ptr[1]=p2.pieza7[1];
+                }
 
+            }
             mensaje = mensaje * 2;
             write(pipe_p2[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             read(pipe_2p[0], &mensaje, sizeof(int));
             write(pipe_1p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             //juegue
+            printf("[%d|%d][%d|%d]",ptr[0],ptr[1],ptr[2],ptr[3]);
             parte=-1;
-        } else if (proceso == 2||parte==2){
+        } else if (proceso == 2){
             //juego
             close(pipe_p2[1]); // cierro el modo de Escritura del padre al hijo
             close(pipe_2p[0]); // cierro el modo de Lectura del hijo al padre
@@ -369,14 +472,45 @@ int main(){
             printf("%d, %d\n", p3.pieza5[0], p3.pieza5[1]);
             printf("%d, %d\n", p3.pieza6[0], p3.pieza6[1]);
             printf("%d, %d\n", p3.pieza7[0], p3.pieza7[1]);
+            if (parte==2){
+                int m=mayor_pieza(&p3);
+                if (m==1){
+                    ptr[0]=p3.pieza1[0];
+                    ptr[1]=p3.pieza1[1];
+                }
+                else if (m==2){
+                    ptr[0]=p3.pieza2[0];
+                    ptr[1]=p3.pieza2[1];
+                }
+                else if (m==3){
+                    ptr[0]=p3.pieza3[0];
+                    ptr[1]=p3.pieza3[1];
+                }
+                else if (m==4){
+                    ptr[0]=p3.pieza4[0];
+                    ptr[1]=p3.pieza4[1];
+                }
+                else if (m==5){
+                    ptr[0]=p3.pieza5[0];
+                    ptr[1]=p3.pieza5[1];
+                }
+                else if (m==6){
+                    ptr[0]=p3.pieza6[0];
+                    ptr[1]=p3.pieza6[1];
+                }
+                else if (m==7){
+                    ptr[0]=p3.pieza7[0];
+                    ptr[1]=p3.pieza7[1];
+                }
 
+            }
             mensaje = mensaje * 2;
             write(pipe_p3[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             read(pipe_3p[0], &mensaje, sizeof(int));
             write(pipe_2p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             //juegue
             parte=-1;
-        } else if (proceso == 3||parte==3){
+        } else if (proceso == 3){
             //juego
             close(pipe_p3[1]); // cierro el modo de Escritura del padre al hijo
             close(pipe_3p[0]); // cierro el modo de Lectura del hijo al padre
@@ -400,14 +534,46 @@ int main(){
             printf("%d, %d\n", p4.pieza5[0], p4.pieza5[1]);
             printf("%d, %d\n", p4.pieza6[0], p4.pieza6[1]);
             printf("%d, %d\n", p4.pieza7[0], p4.pieza7[1]);
-
+            if (parte==3){
+                int m=mayor_pieza(&p4);
+                if (m==1){
+                    ptr[0]=p4.pieza1[0];
+                    ptr[1]=p4.pieza1[1];
+                }
+                else if (m==2){
+                    ptr[0]=p4.pieza2[0];
+                    ptr[1]=p4.pieza2[1];
+                }
+                else if (m==3){
+                    ptr[0]=p4.pieza3[0];
+                    ptr[1]=p4.pieza3[1];
+                }
+                else if (m==4){
+                    ptr[0]=p4.pieza4[0];
+                    ptr[1]=p4.pieza4[1];
+                }
+                else if (m==5){
+                    ptr[0]=p4.pieza5[0];
+                    ptr[1]=p4.pieza5[1];
+                }
+                else if (m==6){
+                    ptr[0]=p4.pieza6[0];
+                    ptr[1]=p4.pieza6[1];
+                }
+                else if (m==7){
+                    ptr[0]=p4.pieza7[0];
+                    ptr[1]=p4.pieza7[1];
+                }
+            }
             mensaje = mensaje * 2;
             write(pipe_p3[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             //juegue
             parte=-1;
         }
         //la idea es hacer pipes que comuniquen con el padre y con los hijos entre sí el read hace que esperen 
+       printf("[%d|%d][%d|%d]",ptr[0],ptr[1],ptr[2],ptr[3]); 
     }
+    
     free(ptr);
     return 0;
 }
