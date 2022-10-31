@@ -323,17 +323,59 @@ int main(){
         printf("parte: %d\n",parte);
         if (proceso==4){
             //este es el padre
-            
+            close(pipe_p1[0]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_1p[1]); // cierro el modo de Lectura del hijo al padre
+
+            close(pipe_p2[0]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_2p[1]); // cierro el modo de Lectura del hijo al padre
+
+            close(pipe_p3[0]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_3p[1]); // cierro el modo de Lectura del hijo al padre
+
+            close(pipe_p4[0]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_4p[1]); // cierro el modo de Lectura del hijo al padre
+
+            // int *ptr = NULL;
+            // ptr = &parte;
+
+            int mensaje = 1;
+            // *ptr = mensaje;
+            printf("Mensaje original: %d\n", mensaje);
+            write(pipe_p1[1], &mensaje, sizeof(int));
+            read(pipe_1p[0], &mensaje, sizeof(int));
+            printf("Mensaje despues de hijo 1: %d\n", mensaje);
+
+            // *ptr = mensaje;
+
+            write(pipe_p2[1], &mensaje, sizeof(int));
+            read(pipe_2p[0], &mensaje, sizeof(int));
+            printf("Mensaje despues de hijo 2: %d\n", mensaje);
+
+            // *ptr = mensaje;
+
+            write(pipe_p3[1], &mensaje, sizeof(int));
+            read(pipe_3p[0], &mensaje, sizeof(int));
+            printf("Mensaje despues de hijo 3: %d\n", mensaje);
+
+            // *ptr = mensaje;
+
+            write(pipe_p4[1], &mensaje, sizeof(int));
+            read(pipe_4p[0], &mensaje, sizeof(int));
+            printf("Mensaje despues de hijo 4: %d\n", mensaje);
             
         } 
         if (proceso == 0){
-            close(pipe_p1[0]); // cierro el modo de Lectura del padre al hijo
-            close(pipe_1p[1]); // cierro el modo de Escritura del hijo al padre
+            close(pipe_p1[1]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_1p[0]); // cierro el modo de Lectura del hijo al padre
 
             int pos1[7];
-            memcpy(pos1,pos,sizeof(int)*7);
+            memcpy(pos1, pos, sizeof(int) * 7);
 
             crear_piezas(&p1, pos1);
+
+            int mensaje;
+
+            read(pipe_p1[0], &mensaje, sizeof(int));
 
             printf("Creado el mazo del Jugador 1\n");
             printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
@@ -375,9 +417,10 @@ int main(){
                 }
 
             }
-            int mensaje = i * 100;
-            write(pipe_p1[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
-            read(pipe_1p[0], &mensaje, sizeof(int));
+            mensaje = mensaje * 100;
+            // mensaje++;
+            printf("El mensaje mandado por jugador 1 es %d\n", mensaje);
+            write(pipe_1p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
 
             // printf("la respuesta de mi hijo es: %d \n", mensaje);
             // print del tablero
@@ -385,16 +428,17 @@ int main(){
 
             parte=-1;
         }else if (proceso == 1){
-            
+            close(pipe_p2[1]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_2p[0]); // cierro el modo de Lectura del hijo al padre
             //juego
-            close(pipe_p1[1]); // cierro el modo de Escritura del padre al hijo
-            close(pipe_1p[0]); // cierro el modo de Lectura del hijo al padre
+            // close(pipe_p1[1]); // cierro el modo de Escritura del padre al hijo
+            // close(pipe_1p[0]); // cierro el modo de Lectura del hijo al padre
 
-            close(pipe_p2[0]); // cierro el modo de Lectura del padre al hijo
-            close(pipe_2p[1]); // cierro el modo de Escritura del hijo al padre
+            // close(pipe_p2[0]); // cierro el modo de Lectura del padre al hijo
+            // close(pipe_2p[1]); // cierro el modo de Escritura del hijo al padre
 
             int mensaje;
-            read(pipe_p1[0], &mensaje, sizeof(int));
+            read(pipe_p2[0], &mensaje, sizeof(int));
 
             int pos2[7];
             memcpy(pos2,pos + 8,sizeof(int)*7);
@@ -441,23 +485,32 @@ int main(){
                 }
 
             }
-            mensaje = mensaje * 2;
-            write(pipe_p2[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
-            read(pipe_2p[0], &mensaje, sizeof(int));
-            write(pipe_1p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+
+            mensaje = mensaje * 100;
+            // mensaje++;
+            printf("El mensaje mandado por jugador 2 es %d\n", mensaje);
+            write(pipe_2p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+
+            // mensaje = mensaje * 2;
+            // write(pipe_p2[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+            // read(pipe_2p[0], &mensaje, sizeof(int));
+            // write(pipe_1p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             //juegue
-            printf("[%d|%d][%d|%d]",ptr[0],ptr[1],ptr[2],ptr[3]);
+            // printf("[%d|%d][%d|%d]",ptr[0],ptr[1],ptr[2],ptr[3]);
             parte=-1;
         } else if (proceso == 2){
-            //juego
-            close(pipe_p2[1]); // cierro el modo de Escritura del padre al hijo
-            close(pipe_2p[0]); // cierro el modo de Lectura del hijo al padre
+            close(pipe_p3[1]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_3p[0]); // cierro el modo de Lectura del hijo al padre
 
-            close(pipe_p3[0]); // cierro el modo de Lectura del padre al hijo
-            close(pipe_3p[1]); // cierro el modo de Escritura del hijo al padre
+            //juego
+            // close(pipe_p2[1]); // cierro el modo de Escritura del padre al hijo
+            // close(pipe_2p[0]); // cierro el modo de Lectura del hijo al padre
+
+            // close(pipe_p3[0]); // cierro el modo de Lectura del padre al hijo
+            // close(pipe_3p[1]); // cierro el modo de Escritura del hijo al padre
 
             int mensaje;
-            read(pipe_p2[0], &mensaje, sizeof(int));
+            read(pipe_p3[0], &mensaje, sizeof(int));
 
             int pos3[7];
             memcpy(pos3,pos + 15,sizeof(int)*7);
@@ -505,21 +558,26 @@ int main(){
 
             }
             mensaje = mensaje * 2;
-            write(pipe_p3[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
-            read(pipe_3p[0], &mensaje, sizeof(int));
-            write(pipe_2p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+            printf("El mensaje mandado por jugador 2 es %d\n", mensaje);
+            write(pipe_3p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+            // write(pipe_p3[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+            // read(pipe_3p[0], &mensaje, sizeof(int));
+            // write(pipe_2p[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             //juegue
             parte=-1;
-        } else if (proceso == 3){
-            //juego
-            close(pipe_p3[1]); // cierro el modo de Escritura del padre al hijo
-            close(pipe_3p[0]); // cierro el modo de Lectura del hijo al padre
 
-            close(pipe_p4[0]); // cierro el modo de Lectura del padre al hijo
-            close(pipe_4p[1]); // cierro el modo de Escritura del hijo al padre
+        } else if (proceso == 3){
+            close(pipe_p4[1]); // cierro el modo de Escritura del padre al hijo
+            close(pipe_4p[0]); // cierro el modo de Lectura del hijo al padre
+            //juego
+            // close(pipe_p3[1]); // cierro el modo de Escritura del padre al hijo
+            // close(pipe_3p[0]); // cierro el modo de Lectura del hijo al padre
+
+            // close(pipe_p4[0]); // cierro el modo de Lectura del padre al hijo
+            // close(pipe_4p[1]); // cierro el modo de Escritura del hijo al padre
 
             int mensaje;
-            read(pipe_p3[0], &mensaje, sizeof(int));
+            read(pipe_p4[0], &mensaje, sizeof(int));
 
             int pos4[7];
             memcpy(pos4,pos + 22,sizeof(int)*7);
@@ -566,12 +624,13 @@ int main(){
                 }
             }
             mensaje = mensaje * 2;
-            write(pipe_p3[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
+            write(pipe_4p[1], &mensaje, sizeof(int));
+            // write(pipe_p3[1], &mensaje, sizeof(int)); // Mensaje puesto en la PIPE del padre al hijo
             //juegue
             parte=-1;
         }
         //la idea es hacer pipes que comuniquen con el padre y con los hijos entre sí el read hace que esperen 
-       printf("[%d|%d][%d|%d]",ptr[0],ptr[1],ptr[2],ptr[3]); 
+       printf("[%d|%d][%d|%d]\n",ptr[0],ptr[1],ptr[2],ptr[3]); 
     }
     
     free(ptr);
