@@ -13,3 +13,5 @@ Para compilar:
      Esto para ejecutar el archivo
     -Para borrar los archivos de ejecución, escribir:
          make clean
+Para usar:
+ingresar inputs correctos, si se parte colocar la primera ficha a la izquierda, además si se quiere pasar ingresar 0 o 1 después de poner -1.
