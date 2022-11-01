@@ -396,7 +396,7 @@ int main(){
         //if del proceso padre con whiles para cada hijo vrible que aumenta si todos juegan +1
         if (proceso == 4){
             if (parte == 0){
-                printf("turno del primer jugador\n");
+                printf("Turno del primer jugador\n");
                 write(pipe_0p[1], &tablero[0], sizeof(int));
                 write(pipe_0p[1], &tablero[1], sizeof(int));
                 write(pipe_0p[1], &tablero[2], sizeof(int));
@@ -409,7 +409,7 @@ int main(){
                 parte = 1;
             }
             if (parte == 1){
-                printf("turno del segundo jugador\n");
+                printf("Turno del segundo jugador\n");
                 write(pipe_1p[1], &tablero[0], sizeof(int));
                 write(pipe_1p[1], &tablero[1], sizeof(int));
                 write(pipe_1p[1], &tablero[2], sizeof(int));
@@ -422,7 +422,7 @@ int main(){
                 parte = 2;
             }
             if (parte == 2){
-                printf("turno del tercer jugador\n");
+                printf("Turno del tercer jugador\n");
                 write(pipe_2p[1], &tablero[0], sizeof(int));
                 write(pipe_2p[1], &tablero[1], sizeof(int));
                 write(pipe_2p[1], &tablero[2], sizeof(int));
@@ -435,7 +435,7 @@ int main(){
                 parte = 3;
             }
             if (parte == 3){
-                printf("turno del cuarto jugador\n");
+                printf("Turno del cuarto jugador\n");
                 write(pipe_3p[1], &tablero[0], sizeof(int));
                 write(pipe_3p[1], &tablero[1], sizeof(int));
                 write(pipe_3p[1], &tablero[2], sizeof(int));
@@ -1587,28 +1587,28 @@ int main(){
             read(pipe_3p[0], &tablero[2], sizeof(int));
             read(pipe_3p[0], &tablero[3], sizeof(int));
             printf("Tu turno:\n");
-            if(p4.pieza1[0]!=-1){
-                printf("1.-[%d|%d]",p4.pieza1[0],p4.pieza1[1]);
+            if (p4.pieza1[0] != -1){
+                printf("1.-[%d|%d]\n",p4.pieza1[0],p4.pieza1[1]);
             }
-            if(p4.pieza2[0]!=-1){
-                printf("2.-[%d|%d]",p4.pieza2[0],p4.pieza2[1]);
+            if (p4.pieza2[0] != -1){
+                printf("2.-[%d|%d]\n",p4.pieza2[0],p4.pieza2[1]);
             }
-            if(p4.pieza3[0]!=-1){
-                printf("3.-[%d|%d]",p4.pieza3[0],p4.pieza3[1]);
+            if (p4.pieza3[0] != -1){
+                printf("3.-[%d|%d]\n",p4.pieza3[0],p4.pieza3[1]);
             }
-            if(p4.pieza4[0]!=-1){
-                printf("4.-[%d|%d]",p4.pieza4[0],p4.pieza4[1]);
+            if (p4.pieza4[0] != -1){
+                printf("4.-[%d|%d]\n",p4.pieza4[0],p4.pieza4[1]);
             }
-            if(p4.pieza5[0]!=-1){
-                printf("5.-[%d|%d]",p4.pieza5[0],p4.pieza5[1]);
+            if (p4.pieza5[0] != -1){
+                printf("5.-[%d|%d]\n",p4.pieza5[0],p4.pieza5[1]);
             }
-            if(p4.pieza6[0]!=-1){
-                printf("6.-[%d|%d]",p4.pieza6[0],p4.pieza6[1]);
+            if (p4.pieza6[0] != -1){
+                printf("6.-[%d|%d]\n",p4.pieza6[0],p4.pieza6[1]);
             }
-            if(p4.pieza7[0]!=-1){
-                printf("7.-[%d|%d]",p4.pieza7[0],p4.pieza7[1]);
+            if (p4.pieza7[0] != -1){
+                printf("7.-[%d|%d]\n",p4.pieza7[0],p4.pieza7[1]);
             }
-            printf("ingresa el número de la ficha");
+            printf("Ingresa el número de la ficha\n");
             scanf("%d",&entero);
             //rellenar mañana/////////////////////////////////////////////////////////////////////////////////////
             if(tablero[0]==-1&&tablero[1]==-1&&tablero[2]==-1&&tablero[3]==-1){
