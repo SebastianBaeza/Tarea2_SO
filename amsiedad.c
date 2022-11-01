@@ -20,15 +20,10 @@ struct mazo{
     int pieza7[2];
 };
 
-struct colocar{
-    int piezader[2];
-    int piezaizq[2];
-};
-
 /*
 int mayor_pieza(struct mazo *jugador)
 //////////////
-Funcion que retorna la posición de la pieza mayor del mazo de cada jugador
+Funcion que retorna un entero representando a la pieza del mazo (1-7) cuya suma es mayor
 //////////////
 - Jugador: Mazo del jugador
 */
@@ -71,13 +66,14 @@ int mayor_pieza(struct mazo *jugador){
 }
 
 /*
-int jugada(struct mazo *jugador,int izquierda, int derecha)
+int jugada(struct mazo *jugador, int izquierda, int derecha)
 //////////////
-Funcion que retorna cual pieza esta disponible para el juego, y su posición en el tablero (de 1 a 7 para la izquierda y de 8 a 14 a la derecha)
+Funcion que retorna cual pieza esta disponible para el juego (por medio de un entero), y su posición posible en el tablero (de 1 a 7 para la izquierda y de 8 a 14 a la derecha)
+ej. retornar 6 significa que la pieza 6 del mazo puede ser colocada a la izq y si retorna 12, la pieza 6 del mazo puede ser colocada a la derecha.
 //////////////
 - Jugador: Mazo del jugador
-- Izquierda: Valor de la pieza relevante a la izquierda
-- Derecha: Valor de la pieza relevante a la derecha
+- Izquierda: Valor de la pieza relevante a la izquierda del tablero
+- Derecha: Valor de la pieza relevante a la derecha del tablero
 */
 int jugada(struct mazo *jugador,int izquierda, int derecha){
     if (jugador->pieza1[0] == izquierda){
@@ -175,10 +171,11 @@ int jugada(struct mazo *jugador,int izquierda, int derecha){
 /*
 void crear_piezas(struct mazo *jugador, int posicion[7])
 //////////////
-Funcion que rellena el mazo del jugador, con las fichas correspondientes a la posición obtenida del arreglo posicion[7]
+Funcion que rellena el mazo del jugador, rellena con las fichas del arreglo piezas indicadas por los valores de posicion[7]. El arreglo
+piezas contiene a todas las fichas del Dominó
 //////////////
 - Jugador: Mazo del jugador
-- posicion[7]: Arreglo con las posiciones de las cuales sacar las piezas
+- posicion[7]: Arreglo con posiciones al azar del 0-27 
 */
 void crear_piezas(struct mazo *jugador, int posicion[7]){
     int numero = 0;
@@ -236,7 +233,6 @@ No tiene inputs
 int main(){
     int proceso;
     int pid, pid1, pid2, pid3;
-    // , pid4;
 
     int pipe_p0[2];
     int pipe_0p[2];
@@ -261,11 +257,10 @@ int main(){
     int temp2 = 10;
     int temp3 = 10;
     int temp4 = 10;
-    // int fin = 0;
+
     int parte;
     int mayor;
     int pieza;
-    // int entero;
     int sentido;
     int sum1;
     int sum2;
@@ -290,9 +285,6 @@ int main(){
     int check = 0;
     srand(time(NULL));
     parte = rand()%4;
-
-    // int flag = 0;
-
     for (int a = 0; a < 28;){
         var = rand() % 28;
         for (int b = 0; b <= a; b++){
@@ -305,12 +297,9 @@ int main(){
             continue;
         } else {
             pos[a] = var;
-            // printf("Arreglo de posiciones, espacio %d = %d\n", a, pos[a]);
             a++;
         }
     }
-  
-    // los mazos$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     struct mazo p1;
     struct mazo p2;
     struct mazo p3;
@@ -331,8 +320,6 @@ int main(){
     int pos4[7];
     memcpy(pos4,pos + 21,sizeof(int)*7);
     crear_piezas(&p4, pos4);
-
-    // hago los procesos$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
     pid = fork();
   
@@ -421,9 +408,7 @@ int main(){
         close(pipe_3p[1]);
         close(pipe_p3[0]);
     }
-    //intento que interactuen entre sí los procesos, mas tarde lo extiendo a los otros$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
     while (1) {
-        //if del proceso padre con whiles para cada hijo vrible que aumenta si todos juegan +1
         if (proceso == 4){
             if (parte == 0){
                 printf("Turno del 1er jugador\n");
@@ -2758,7 +2743,7 @@ int main(){
                         }
                     }
                 }
-                if (p3.pieza1[0] == -2 && p3.pieza2[0] == -2 && p3.pieza3[0] == -2 && p3.pieza4[0] == -2 && p3.pieza5[0] == -2 && p3.pieza6[0] == -2 && p3.pieza7[0] == -2){
+                if (p4.pieza1[0] == -2 && p4.pieza2[0] == -2 && p4.pieza3[0] == -2 && p4.pieza4[0] == -2 && p4.pieza5[0] == -2 && p4.pieza6[0] == -2 && p4.pieza7[0] == -2){
                     menor = 14;
                     write(pipe_p3[1], &menor, sizeof(int));
                     write(pipe_p3[1], &menor, sizeof(int)); 
@@ -2776,3 +2761,4 @@ int main(){
     }
     return 0;
 }
+
