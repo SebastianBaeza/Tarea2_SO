@@ -7,9 +7,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <signal.h>
-//las 28 piezas
+
 int piezas[28][2] = {{6,6},{6,5},{5,5},{6,4},{5,4},{4,4},{6,3},{5,3},{4,3},{3,3},{6,2},{5,2},{4,2},{3,2},{2,2},{6,1},{5,1},{4,1},{3,1},{2,1},{1,1},{0,6},{0,5},{0,4},{0,3},{0,2},{0,1},{0,0}};
-//mazo de cada jugador
 
 struct mazo{
     int pieza1[2];
@@ -21,28 +20,29 @@ struct mazo{
     int pieza7[2];
 };
 
-//el tablero de juego, solo me importa lo que hay a la izq y a la der,
-//si pongo una pieza en la izq reemplazo el valor
 struct colocar{
     int piezader[2];
     int piezaizq[2];
 };
-//quiero rellenar los mazos de los jugadores, el random es para que me de un numero del 0 al 27 para rellenar el mazo con la pieza
-//tablero dentro de pipe
-//en la posición del numero del arreglo piezas
-//busca el numero de pieza que puede jugar izquierda y derecha representan a los numeros en el tablero retorna el numero de la pieza
-//si no encuentra retorna -1, esta función no debiese servir para partir
+
+/*
+int mayor_pieza(struct mazo *jugador)
+//////////////
+Funcion que retorna la posición de la pieza mayor del mazo de cada jugador
+//////////////
+- Jugador: Mazo del jugador
+*/
 int mayor_pieza(struct mazo *jugador){
     int actual;
     int pos = 1;
     int sum1 = (jugador->pieza1[0]) + (jugador->pieza1[1]);
     actual = sum1;
-    int sum2 = (jugador->pieza2[0])+(jugador->pieza2[1]);
+    int sum2 = (jugador->pieza2[0]) + (jugador->pieza2[1]);
     if (sum2 > actual){
         actual = sum2;
         pos = 2;
     }
-    int sum3 = (jugador->pieza3[0])+(jugador->pieza3[1]);
+    int sum3 = (jugador->pieza3[0]) + (jugador->pieza3[1]);
     if (sum3 > actual){
         actual = sum3;
         pos = 3;
@@ -63,12 +63,22 @@ int mayor_pieza(struct mazo *jugador){
         pos = 6;
     }
     int sum7 = (jugador->pieza7[0]) + (jugador->pieza7[1]);
-        if(sum7 > actual){
+        if (sum7 > actual){
         actual = sum7;
         pos = 7;
     }
     return pos;
 }
+
+/*
+int jugada(struct mazo *jugador,int izquierda, int derecha)
+//////////////
+Funcion que retorna cual pieza esta disponible para el juego, y su posición en el tablero (de 1 a 7 para la izquierda y de 8 a 14 a la derecha)
+//////////////
+- Jugador: Mazo del jugador
+- Izquierda: Valor de la pieza relevante a la izquierda
+- Derecha: Valor de la pieza relevante a la derecha
+*/
 int jugada(struct mazo *jugador,int izquierda, int derecha){
     if (jugador->pieza1[0] == izquierda){
         return 1;
@@ -114,7 +124,7 @@ int jugada(struct mazo *jugador,int izquierda, int derecha){
         return 7;
     }
     ////////////////////////////////////////////
-    if(jugador->pieza1[0]==derecha){
+    if (jugador->pieza1[0]==derecha){
         return 8;
     }
     else if (jugador->pieza2[0] == derecha){
@@ -161,55 +171,52 @@ int jugada(struct mazo *jugador,int izquierda, int derecha){
         return -1;
     }
 }
+
+/*
+void crear_piezas(struct mazo *jugador, int posicion[7])
+//////////////
+Funcion que rellena el mazo del jugador, con las fichas correspondientes a la posición obtenida del arreglo posicion[7]
+//////////////
+- Jugador: Mazo del jugador
+- posicion[7]: Arreglo con las posiciones de las cuales sacar las piezas
+*/
 void crear_piezas(struct mazo *jugador, int posicion[7]){
-    // int posicion = 0;
     int numero = 0;
     int flag = 0;
     while (flag == 0){
-        // posicion = rand() % 27; //cambiar a 27
-        // if (piezas[posicion][0] == -1){
-        //     continue;
-        // }
         if (numero == 0) {
             jugador->pieza1[0] = piezas[posicion[0]][0];
             jugador->pieza1[1] = piezas[posicion[0]][1];
-            // piezas[posicion][0] = -1;
             numero++;
         }
         else if (numero == 1) {
             jugador->pieza2[0] = piezas[posicion[1]][0];
             jugador->pieza2[1] = piezas[posicion[1]][1];
-            // piezas[posicion[1]][0] = -1;
             numero++;
         }
         else if (numero == 2) {
             jugador->pieza3[0] = piezas[posicion[2]][0];
             jugador->pieza3[1] = piezas[posicion[2]][1];
-            // piezas[posicion[1]][0] = -1;
             numero++;
         }
         else if (numero == 3){
             jugador->pieza4[0] = piezas[posicion[3]][0];
             jugador->pieza4[1] = piezas[posicion[3]][1];
-            // piezas[posicion[1]][0] = -1;
             numero++;
         }
         else if (numero == 4){
             jugador->pieza5[0] = piezas[posicion[4]][0];
             jugador->pieza5[1] = piezas[posicion[4]][1];
-            // piezas[posicion[1]][0] = -1;
             numero++;
         }
-        else if(numero == 5){
+        else if (numero == 5){
             jugador->pieza6[0] = piezas[posicion[5]][0];
             jugador->pieza6[1] = piezas[posicion[5]][1];
-            // piezas[posicion[1]][0] = -1;
             numero++;
         }
-        else if(numero == 6){
+        else if (numero == 6){
             jugador->pieza7[0] = piezas[posicion[6]][0];
             jugador->pieza7[1] = piezas[posicion[6]][1];
-            // piezas[posicion[1]][0] = -1;
             numero++;
             flag = 1;
         }
@@ -217,11 +224,20 @@ void crear_piezas(struct mazo *jugador, int posicion[7]){
     }
 }
 
-
+/*
+int main()
+//////////////
+Juego principal, ejecuta el juego, creando 4 procesos hijos, de los cuales 3 juegan automaticamente (los jugadores 1, 2 y 3)
+y el 4to es controlado por el usuario mediante inputs, permitiendo poner piezas en la izquierda o la derecha (ubicandose al 
+derecho o al reves automaticamente)
+//////////////
+No tiene inputs
+*/
 int main(){
     int proceso;
-    int pid, pid1, pid2, pid3, pid4;
-            //Crear las PIPES [0]: Lectura [1]: Escritura
+    int pid, pid1, pid2, pid3;
+    // , pid4;
+
     int pipe_p0[2];
     int pipe_0p[2];
     int pipe_p1[2];
@@ -230,9 +246,9 @@ int main(){
     int pipe_2p[2];
     int pipe_p3[2];
     int pipe_3p[2];
-    //el tablero
-    int tablero[4] ={-1,-1,-1,-1};
-    //Inicializar PIPES
+
+    int tablero[4] = {-1,-1,-1,-1};
+
     pipe(pipe_p0);
     pipe(pipe_0p);
     pipe(pipe_p1);
@@ -241,15 +257,15 @@ int main(){
     pipe(pipe_2p);
     pipe(pipe_p3);
     pipe(pipe_3p);
-    int temp1=10;
-    int temp2=10;
-    int temp3=10;
-    int temp4=10;
-    int fin=0;
+    int temp1 = 10;
+    int temp2 = 10;
+    int temp3 = 10;
+    int temp4 = 10;
+    // int fin = 0;
     int parte;
     int mayor;
     int pieza;
-    int entero;
+    // int entero;
     int sentido;
     int sum1;
     int sum2;
@@ -265,17 +281,17 @@ int main(){
     int sumap5;
     int sumap6;
     int sumap7;
-    int flag1=0;
-    int flag2=0;
-    int flag3=0;
-    int flag4=0;
+    int flag1 = 0;
+    int flag2 = 0;
+    int flag3 = 0;
+    int flag4 = 0;
     int pos[28];
     int var = 0;
     int check = 0;
     srand(time(NULL));
     parte = rand()%4;
 
-    int flag = 0;
+    // int flag = 0;
 
     for (int a = 0; a < 28;){
         var = rand() % 28;
@@ -317,34 +333,27 @@ int main(){
     crear_piezas(&p4, pos4);
 
     // hago los procesos$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    // value returned from fork() system call
+
     pid = fork();
   
-    // If fork() returns zero then it
-    // means it is child process.
     if (pid == 0) {
-  
-        // First child needs to be printed
-        // later hence this process is made
-        // to sleep for 3 seconds.
-        
-  
-        // This is first child process
-        // getpid() gives the process
-        // id and getppid() gives the
-        // parent id of that process.
         proceso = 0;
-        
     } else {
+
         pid1 = fork();
+
         if (pid1 == 0) {
             proceso = 1;
         } else {
+
             pid2 = fork();
+
             if (pid2 == 0) {
                 proceso = 2;
             } else {
+
                 pid3 = fork();
+
                 if (pid3 == 0) {
                     proceso = 3;
                 } else {
@@ -365,7 +374,6 @@ int main(){
         close(pipe_p3[1]);
     }
     else if (proceso == 0){
-        //cambiar for por coso manual
         for(int i = 0; i < 2; i++){
             close(pipe_1p[i]);
             close(pipe_p1[i]);
@@ -378,7 +386,6 @@ int main(){
         close(pipe_p0[0]);
     }
     else if (proceso == 1){
-        //cambiar for por coso manual
         for(int i = 0; i < 2; i++){
             close(pipe_0p[i]);
             close(pipe_p0[i]);
@@ -391,7 +398,6 @@ int main(){
         close(pipe_p1[0]);
     }
     else if (proceso == 2){
-        //cambiar for por coso manual
         for(int i = 0; i < 2; i++){
             close(pipe_0p[i]);
             close(pipe_p0[i]);
@@ -404,7 +410,6 @@ int main(){
         close(pipe_p2[0]);
     }
     else if (proceso == 3){
-        //cambiar for por coso manual
         for(int i = 0; i < 2; i++){
             close(pipe_0p[i]);
             close(pipe_p0[i]);
@@ -417,205 +422,204 @@ int main(){
         close(pipe_p3[0]);
     }
     //intento que interactuen entre sí los procesos, mas tarde lo extiendo a los otros$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-    while(1){
+    while (1) {
         //if del proceso padre con whiles para cada hijo vrible que aumenta si todos juegan +1
         if (proceso == 4){
             if (parte == 0){
-                printf("turno del primer jugador\n");
+                printf("Turno del 1er jugador\n");
                 write(pipe_0p[1], &tablero[0], sizeof(int));
                 write(pipe_0p[1], &tablero[1], sizeof(int));
                 write(pipe_0p[1], &tablero[2], sizeof(int));
                 write(pipe_0p[1], &tablero[3], sizeof(int));
-                temp1=tablero[0];
-                temp2=tablero[1];
-                temp3=tablero[2];
-                temp4=tablero[3];
+                temp1 = tablero[0];
+                temp2 = tablero[1];
+                temp3 = tablero[2];
+                temp4 = tablero[3];
                 read(pipe_p0[0], &tablero[0], sizeof(int));
                 read(pipe_p0[0], &tablero[1], sizeof(int));
                 read(pipe_p0[0], &tablero[2], sizeof(int));
                 read(pipe_p0[0], &tablero[3], sizeof(int));
-                if(temp1==tablero[0]&&temp2==tablero[1]&&temp3==tablero[2]&&temp4==tablero[3]){
-                    flag1=1;
+                if (temp1 == tablero[0] && temp2 == tablero[1] && temp3 == tablero[2] && temp4 == tablero[3]){
+                    flag1 = 1;
                 }
-                else{
-                    flag1=0;
+                else {
+                    flag1 = 0;
                 }
-                if(tablero[0]==11){
-                    printf("Gana el jugador 1");
+                if (tablero[0] == 11){
+                    printf("Gana el jugador 1\n");
                     kill(pid,SIGKILL);
                     kill(pid1,SIGKILL);
                     kill(pid2,SIGKILL);
                     kill(pid3,SIGKILL);
                     break;
                 }
-                printf("[%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
+                printf("Estado actual del tablero: [%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
                 parte = 1;
             }
             if (parte == 1){
-                printf("turno del segundo jugador\n");
+                printf("Turno del 2do jugador\n");
                 write(pipe_1p[1], &tablero[0], sizeof(int));
                 write(pipe_1p[1], &tablero[1], sizeof(int));
                 write(pipe_1p[1], &tablero[2], sizeof(int));
                 write(pipe_1p[1], &tablero[3], sizeof(int));
-                temp1=tablero[0];
-                temp2=tablero[1];
-                temp3=tablero[2];
-                temp4=tablero[3];
+                temp1 = tablero[0];
+                temp2 = tablero[1];
+                temp3 = tablero[2];
+                temp4 = tablero[3];
                 read(pipe_p1[0], &tablero[0], sizeof(int));
                 read(pipe_p1[0], &tablero[1], sizeof(int));
                 read(pipe_p1[0], &tablero[2], sizeof(int));
                 read(pipe_p1[0], &tablero[3], sizeof(int));
-                if(temp1==tablero[0]&&temp2==tablero[1]&&temp3==tablero[2]&&temp4==tablero[3]){
-                    flag2=1;
+                if (temp1 == tablero[0] && temp2 == tablero[1] && temp3 == tablero[2] && temp4 == tablero[3]){
+                    flag2 = 1;
                 }
-                else{
-                    flag2=0;
+                else {
+                    flag2 = 0;
                 }
-                if(tablero[0]==12){
-                    printf("Gana el jugador 2");
+                if (tablero[0] == 12){
+                    printf("Gana el jugador 2\n");
                     kill(pid,SIGKILL);
                     kill(pid1,SIGKILL);
                     kill(pid2,SIGKILL);
                     kill(pid3,SIGKILL);
                     break;
                 }
-                printf("[%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
+                printf("Estado actual del tablero: [%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
                 parte = 2;
             }
             if (parte == 2){
-                printf("turno del tercer jugador\n");
+                printf("Turno del 3er jugador\n");
                 write(pipe_2p[1], &tablero[0], sizeof(int));
                 write(pipe_2p[1], &tablero[1], sizeof(int));
                 write(pipe_2p[1], &tablero[2], sizeof(int));
                 write(pipe_2p[1], &tablero[3], sizeof(int));
-                temp1=tablero[0];
-                temp2=tablero[1];
-                temp3=tablero[2];
-                temp4=tablero[3];
+                temp1 = tablero[0];
+                temp2 = tablero[1];
+                temp3 = tablero[2];
+                temp4 = tablero[3];
                 read(pipe_p2[0], &tablero[0], sizeof(int));
                 read(pipe_p2[0], &tablero[1], sizeof(int));
                 read(pipe_p2[0], &tablero[2], sizeof(int));
                 read(pipe_p2[0], &tablero[3], sizeof(int));
-                if(temp1==tablero[0]&&temp2==tablero[1]&&temp3==tablero[2]&&temp4==tablero[3]){
-                    flag3=1;
+                if (temp1 == tablero[0] && temp2 == tablero[1] && temp3 == tablero[2] && temp4 == tablero[3]){
+                    flag3 = 1;
                 }
-                else{
-                    flag3=0;
+                else {
+                    flag3 = 0;
                 }
-                if(tablero[0]==13){
-                    printf("Gana el jugador 3");
+                if (tablero[0] == 13){
+                    printf("Gana el jugador 3\n");
                     kill(pid,SIGKILL);
                     kill(pid1,SIGKILL);
                     kill(pid2,SIGKILL);
                     kill(pid3,SIGKILL);
                     break;
                 }
-                printf("[%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
+                printf("Estado actual del tablero: [%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
                 parte = 3;
             }
             if (parte == 3){
-                printf("turno del cuarto jugador\n");
                 printf("Tu turno:\n");
-                if(p4.pieza1[0]!=-2){
-                    printf("1.-[%d|%d]",p4.pieza1[0],p4.pieza1[1]);
+                if (p4.pieza1[0] != -2){
+                    printf("1.-[%d|%d]\n",p4.pieza1[0],p4.pieza1[1]);
                 }
-                if(p4.pieza2[0]!=-2){
-                    printf("2.-[%d|%d]",p4.pieza2[0],p4.pieza2[1]);
+                if (p4.pieza2[0] != -2){
+                    printf("2.-[%d|%d]\n",p4.pieza2[0],p4.pieza2[1]);
                 }
-                if(p4.pieza3[0]!=-2){
-                    printf("3.-[%d|%d]",p4.pieza3[0],p4.pieza3[1]);
+                if (p4.pieza3[0] != -2){
+                    printf("3.-[%d|%d]\n",p4.pieza3[0],p4.pieza3[1]);
                 }
-                if(p4.pieza4[0]!=-2){
-                    printf("4.-[%d|%d]",p4.pieza4[0],p4.pieza4[1]);
+                if (p4.pieza4[0] != -2){
+                    printf("4.-[%d|%d]\n",p4.pieza4[0],p4.pieza4[1]);
                 }
-                if(p4.pieza5[0]!=-2){
-                    printf("5.-[%d|%d]",p4.pieza5[0],p4.pieza5[1]);
+                if (p4.pieza5[0] != -2){
+                    printf("5.-[%d|%d]\n",p4.pieza5[0],p4.pieza5[1]);
                 }
-                if(p4.pieza6[0]!=-2){
-                    printf("6.-[%d|%d]",p4.pieza6[0],p4.pieza6[1]);
+                if (p4.pieza6[0] != -2){
+                    printf("6.-[%d|%d]\n",p4.pieza6[0],p4.pieza6[1]);
                 }
-                if(p4.pieza7[0]!=-2){
-                    printf("7.-[%d|%d]",p4.pieza7[0],p4.pieza7[1]);
+                if (p4.pieza7[0] != -2){
+                    printf("7.-[%d|%d]\n",p4.pieza7[0],p4.pieza7[1]);
                 }
-                printf("\ningresa el número de la ficha o -1 para pasar");
+                printf("Ingresa el número de la ficha a elegir, o -1 para pasar el turno\n");
                 scanf("%d",&pieza);
-                printf("\nquieres ponerla a la izq (0) o a la derecha(1)?");
+                printf("Quieres ponerla a la izquierda (0) o a la derecha (1)?\n");
                 scanf("%d",&sentido);
-                if(pieza==1){
-                    p4.pieza1[0]=-2;
-                    p4.pieza1[1]=-2;
+                if (pieza == 1){
+                    p4.pieza1[0] = -2;
+                    p4.pieza1[1] = -2;
                 }
-                if(pieza==2){
-                    p4.pieza2[0]=-2;
-                    p4.pieza2[1]=-2;
+                if (pieza == 2){
+                    p4.pieza2[0] = -2;
+                    p4.pieza2[1] = -2;
                 }
-                if(pieza==3){
-                    p4.pieza3[0]=-2;
-                    p4.pieza3[1]=-2;
+                if (pieza == 3){
+                    p4.pieza3[0] = -2;
+                    p4.pieza3[1] = -2;
                 }
-                if(pieza==4){
-                    p4.pieza4[0]=-2;
-                    p4.pieza4[1]=-2;
+                if (pieza == 4){
+                    p4.pieza4[0] = -2;
+                    p4.pieza4[1] = -2;
                 }
-                if(pieza==5){
-                    p4.pieza5[0]=-2;
-                    p4.pieza5[1]=-2;
+                if (pieza == 5){
+                    p4.pieza5[0] = -2;
+                    p4.pieza5[1] = -2;
                 }
-                if(pieza==6){
-                    p4.pieza6[0]=-2;
-                    p4.pieza6[1]=-2;
+                if (pieza == 6){
+                    p4.pieza6[0] = -2;
+                    p4.pieza6[1] = -2;
                 }
-                if(pieza==7){
-                    p4.pieza7[0]=-2;
-                    p4.pieza7[1]=-2;
+                if (pieza == 7){
+                    p4.pieza7[0] = -2;
+                    p4.pieza7[1] = -2;
                 }
-                sumap1=p4.pieza1[0]+p4.pieza1[1];
-                if (sumap1<0){
-                    sumap1=99;
+                sumap1 = p4.pieza1[0]+p4.pieza1[1];
+                if (sumap1 < 0){
+                    sumap1 = 99;
 
                 }
-                sum4=sumap1;
-                sumap2=p4.pieza2[0]+p4.pieza2[1];
-                if (sumap2<0){
-                    sumap2=99;
+                sum4 = sumap1;
+                sumap2 = p4.pieza2[0]+p4.pieza2[1];
+                if (sumap2 < 0){
+                    sumap2 = 99;
                 }
-                if (sumap2<menor){
-                    sum4=sumap2;
+                if (sumap2 < menor){
+                    sum4 = sumap2;
                 }
-                sumap3=p4.pieza3[0]+p4.pieza3[1];
-                if (sumap3<0){
-                    sumap3=99;
+                sumap3 = p4.pieza3[0]+p4.pieza3[1];
+                if (sumap3 < 0){
+                    sumap3 = 99;
                 }
-                if (sumap3<menor){
-                    sum4=sumap3;
+                if (sumap3 < menor){
+                    sum4 = sumap3;
                 }
-                sumap4=p4.pieza4[0]+p4.pieza4[1];
-                if (sumap4<0){
-                    sumap4=99;
+                sumap4 = p4.pieza4[0]+p4.pieza4[1];
+                if (sumap4 < 0){
+                    sumap4 = 99;
                 }
-                if (sumap4<menor){
-                    sum4=sumap4;
+                if (sumap4 < menor){
+                    sum4 = sumap4;
                 }
-                sumap5=p4.pieza5[0]+p4.pieza5[1];
-                if (sumap5<0){
-                    sumap5=99;
+                sumap5 = p4.pieza5[0]+p4.pieza5[1];
+                if (sumap5 < 0){
+                    sumap5 = 99;
                 }
-                if (sumap5<menor){
-                    sum4=sumap5;
+                if (sumap5 < menor){
+                    sum4 = sumap5;
                 }
-                sumap6=p4.pieza6[0]+p4.pieza6[1];
-                if (sumap6<0){
-                    sumap6=99;
+                sumap6 = p4.pieza6[0]+p4.pieza6[1];
+                if (sumap6 < 0){
+                    sumap6 = 99;
                 }
-                if (sumap6<menor){
-                    sum4=sumap6;
+                if (sumap6 < menor){
+                    sum4 = sumap6;
                 }
-                sumap7=p4.pieza7[0]+p4.pieza7[1];
-                if (sumap7<0){
-                    sumap7=99;
+                sumap7 = p4.pieza7[0]+p4.pieza7[1];
+                if (sumap7 < 0){
+                    sumap7 = 99;
                 }
-                if (sumap7<menor){
-                    sum4=sumap7;
+                if (sumap7 < menor){
+                    sum4 = sumap7;
                 }
                 write(pipe_3p[1], &tablero[0], sizeof(int));
                 write(pipe_3p[1], &tablero[1], sizeof(int));
@@ -623,35 +627,35 @@ int main(){
                 write(pipe_3p[1], &tablero[3], sizeof(int));
                 write(pipe_3p[1], &pieza, sizeof(int));
                 write(pipe_3p[1], &sentido, sizeof(int));
-                temp1=tablero[0];
-                temp2=tablero[1];
-                temp3=tablero[2];
-                temp4=tablero[3];
+                temp1 = tablero[0];
+                temp2 = tablero[1];
+                temp3 = tablero[2];
+                temp4 = tablero[3];
                 read(pipe_p3[0], &tablero[0], sizeof(int));
                 read(pipe_p3[0], &tablero[1], sizeof(int));
                 read(pipe_p3[0], &tablero[2], sizeof(int));
                 read(pipe_p3[0], &tablero[3], sizeof(int));
-                if(temp1==tablero[0]&&temp2==tablero[1]&&temp3==tablero[2]&&temp4==tablero[3]){
-                    flag4=1;
+                if (temp1 == tablero[0] && temp2 == tablero[1] && temp3 == tablero[2] && temp4 == tablero[3]){
+                    flag4 = 1;
                 }
-                else{
-                    flag4=0;
+                else {
+                    flag4 = 0;
                 }
-                if(tablero[0]==14){
-                    printf("Gana el jugador 4");
+                if (tablero[0] == 14){
+                    printf("Ganaste!");
                     kill(pid,SIGKILL);
                     kill(pid1,SIGKILL);
                     kill(pid2,SIGKILL);
                     kill(pid3,SIGKILL);
                     break;
                 }
-                printf("[%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
+                printf("Estado actual del tablero: [%d|%d][%d|%d]\n",tablero[0],tablero[1],tablero[2],tablero[3]);
                 
-                if(flag1==1&&flag2==1&&flag3==1&&flag4==1){
-                    tablero[0]=99;
-                    tablero[1]=99;
-                    tablero[2]=99;
-                    tablero[3]=99;
+                if (flag1 == 1 && flag2 == 1 && flag3 == 1 && flag4 == 1){
+                    tablero[0] = 99;
+                    tablero[1] = 99;
+                    tablero[2] = 99;
+                    tablero[3] = 99;
                     write(pipe_0p[1], &tablero[0], sizeof(int));
                     write(pipe_0p[1], &tablero[1], sizeof(int));
                     write(pipe_0p[1], &tablero[2], sizeof(int));
@@ -660,9 +664,9 @@ int main(){
                     read(pipe_p0[0], &tablero[1], sizeof(int));
                     read(pipe_p0[0], &tablero[2], sizeof(int));
                     read(pipe_p0[0], &tablero[3], sizeof(int));
-                    sum1=tablero[0];
-                    sumactual=sum1;
-                    ganador=1;
+                    sum1 = tablero[0];
+                    sumactual = sum1;
+                    ganador = 1;
                     write(pipe_1p[1], &tablero[0], sizeof(int));
                     write(pipe_1p[1], &tablero[1], sizeof(int));
                     write(pipe_1p[1], &tablero[2], sizeof(int));
@@ -671,10 +675,10 @@ int main(){
                     read(pipe_p1[0], &tablero[1], sizeof(int));
                     read(pipe_p1[0], &tablero[2], sizeof(int));
                     read(pipe_p1[0], &tablero[3], sizeof(int));
-                    sum2=tablero[0];
-                    if(sum2<sumactual){
-                        sumactual=sum2;
-                        ganador=2;
+                    sum2 = tablero[0];
+                    if (sum2 < sumactual){
+                        sumactual = sum2;
+                        ganador = 2;
                     }
                     write(pipe_2p[1], &tablero[0], sizeof(int));
                     write(pipe_2p[1], &tablero[1], sizeof(int));
@@ -684,16 +688,16 @@ int main(){
                     read(pipe_p2[0], &tablero[1], sizeof(int));
                     read(pipe_p2[0], &tablero[2], sizeof(int));
                     read(pipe_p2[0], &tablero[3], sizeof(int));
-                    sum3=tablero[0];
-                    if(sum3<sumactual){
-                        sumactual=sum3;
-                        ganador=3;
+                    sum3 = tablero[0];
+                    if (sum3 < sumactual){
+                        sumactual = sum3;
+                        ganador = 3;
                     }
-                    if(sum4<sumactual){
-                        sumactual=sum4;
-                        ganador=4;
+                    if (sum4 < sumactual){
+                        sumactual = sum4;
+                        ganador = 4;
                     }
-                    printf("Gana el jugador %d", ganador);
+                    printf("Gana el jugador %d\n", ganador);
                     kill(pid,SIGKILL);
                     kill(pid1,SIGKILL);
                     kill(pid2,SIGKILL);
@@ -706,70 +710,58 @@ int main(){
         } 
 
         if (proceso == 0){
-
-/*          printf("Creado el mazo del Jugador 1\n");
-            printf("%d, %d\n", p1.pieza1[0], p1.pieza1[1]);
-            printf("%d, %d\n", p1.pieza2[0], p1.pieza2[1]);
-            printf("%d, %d\n", p1.pieza3[0], p1.pieza3[1]);
-            printf("%d, %d\n", p1.pieza4[0], p1.pieza4[1]);
-            printf("%d, %d\n", p1.pieza5[0], p1.pieza5[1]);
-            printf("%d, %d\n", p1.pieza6[0], p1.pieza6[1]);
-            printf("%d, %d\n", p1.pieza7[0], p1.pieza7[1]);*/
-
-            //modificar tablero[0]y [1] para poner pieza
-            //se juega y se actualiza un par de numeros del tabler (una peiza y se manda al padre el tablero actualizado)
             read(pipe_0p[0], &tablero[0], sizeof(int));
             read(pipe_0p[0], &tablero[1], sizeof(int));
             read(pipe_0p[0], &tablero[2], sizeof(int));
             read(pipe_0p[0], &tablero[3], sizeof(int));
-            if (tablero[0]==99){
-                sumap1=p1.pieza1[0]+p1.pieza1[1];
-                if (sumap1<0){
-                    sumap1=99;
+            if (tablero[0] == 99){
+                sumap1 = p1.pieza1[0] + p1.pieza1[1];
+                if (sumap1 < 0){
+                    sumap1 = 99;
 
                 }
-                menor=sumap1;
-                sumap2=p1.pieza2[0]+p1.pieza2[1];
-                if (sumap2<0){
-                    sumap2=99;
+                menor = sumap1;
+                sumap2 = p1.pieza2[0] + p1.pieza2[1];
+                if (sumap2 < 0){
+                    sumap2 = 99;
                 }
-                if (sumap2<menor){
-                    menor=sumap2;
+                if (sumap2 < menor){
+                    menor = sumap2;
                 }
-                sumap3=p1.pieza3[0]+p1.pieza3[1];
-                if (sumap3<0){
-                    sumap3=99;
+                sumap3 = p1.pieza3[0] + p1.pieza3[1];
+                if (sumap3 < 0){
+                    sumap3 = 99;
                 }
-                if (sumap3<menor){
-                    menor=sumap3;
+                if (sumap3 < menor){
+                    menor = sumap3;
                 }
-                sumap4=p1.pieza4[0]+p1.pieza4[1];
-                if (sumap4<0){
-                    sumap4=99;
+                sumap4 = p1.pieza4[0] + p1.pieza4[1];
+                if (sumap4 < 0){
+                    sumap4 = 99;
                 }
-                if (sumap4<menor){
-                    menor=sumap4;
+                if (sumap4 < menor){
+                    menor = sumap4;
                 }
-                sumap5=p1.pieza5[0]+p1.pieza5[1];
-                if (sumap5<0){
-                    sumap5=99;
+                sumap5 = p1.pieza5[0] + p1.pieza5[1];
+                if (sumap5 < 0){
+                    sumap5 = 99;
                 }
-                if (sumap5<menor){
-                    menor=sumap5;
+                if (sumap5 < menor){
+                    menor = sumap5;
                 }
-                sumap6=p1.pieza6[0]+p1.pieza6[1];
-                if (sumap6<0){
-                    sumap6=99;
+                sumap6 = p1.pieza6[0] + p1.pieza6[1];
+                if (sumap6 < 0){
+                    sumap6 = 99;
                 }
-                if (sumap6<menor){
-                    menor=sumap6;
+                if (sumap6 < menor){
+                    menor = sumap6;
                 }
-                sumap7=p1.pieza7[0]+p1.pieza7[1];
-                if (sumap7<0){
-                    sumap7=99;
+                sumap7 = p1.pieza7[0] + p1.pieza7[1];
+                if (sumap7 < 0){
+                    sumap7 = 99;
                 }
-                if (sumap7<menor){
-                    menor=sumap7;
+                if (sumap7 < menor){
+                    menor = sumap7;
                 }
                 write(pipe_p0[1], &menor, sizeof(int));
                 write(pipe_p0[1], &menor, sizeof(int)); 
@@ -784,276 +776,276 @@ int main(){
                 if (mayor == 1){
                     tablero[0] = p1.pieza1[0];
                     tablero[1] = p1.pieza1[1];
-                    p1.pieza1[0]=-2;
-                    p1.pieza1[1]=-2;
+                    p1.pieza1[0] = -2;
+                    p1.pieza1[1] = -2;
                 }
-                else if(mayor == 2){
+                else if (mayor == 2){
                     tablero[0] = p1.pieza2[0];
                     tablero[1] = p1.pieza2[1];
-                    p1.pieza2[0]=-2;
-                    p1.pieza2[1]=-2;
+                    p1.pieza2[0] = -2;
+                    p1.pieza2[1] = -2;
 
                 }
-                else if(mayor == 3){
+                else if (mayor == 3){
                     tablero[0] = p1.pieza3[0];
                     tablero[1] = p1.pieza3[1];
-                    p1.pieza3[0]=-2;
-                    p1.pieza3[1]=-2;
+                    p1.pieza3[0] = -2;
+                    p1.pieza3[1] = -2;
                 }
-                else if(mayor == 4){
+                else if (mayor == 4){
                     tablero[0] = p1.pieza4[0];
                     tablero[1] = p1.pieza4[1];
-                    p1.pieza4[0]=-2;
-                    p1.pieza4[1]=-2;
+                    p1.pieza4[0] = -2;
+                    p1.pieza4[1] = -2;
                 }
-                else if(mayor == 5){
+                else if (mayor == 5){
                     tablero[0] = p1.pieza5[0];
                     tablero[1] = p1.pieza5[1];
-                    p1.pieza5[0]=-2;
-                    p1.pieza5[1]=-2;
+                    p1.pieza5[0] = -2;
+                    p1.pieza5[1] = -2;
                 }
-                else if(mayor == 6){
+                else if (mayor == 6){
                     tablero[0] = p1.pieza6[0];
                     tablero[1] = p1.pieza6[1];
-                    p1.pieza6[0]=-2;
-                    p1.pieza6[1]=-2;
+                    p1.pieza6[0] = -2;
+                    p1.pieza6[1] = -2;
                 }
-                else if(mayor == 7){
+                else if (mayor == 7){
                     tablero[0] = p1.pieza7[0];
                     tablero[1] = p1.pieza7[1];
-                    p1.pieza7[0]=-2;
-                    p1.pieza7[1]=-2;
+                    p1.pieza7[0] = -2;
+                    p1.pieza7[1] = -2;
                 }
                 write(pipe_p0[1], &tablero[0], sizeof(int));
                 write(pipe_p0[1], &tablero[1], sizeof(int)); 
                 write(pipe_p0[1], &tablero[2], sizeof(int));
                 write(pipe_p0[1], &tablero[3], sizeof(int)); 
             }
-            //si es la segunda jugada después de la primera pieza
+            // Jugada N° 2
             else if (tablero[2] == -1){
                 pieza = jugada(&p1,tablero[0],tablero[1]);
-                if (pieza==1){
-                    if (tablero[0]==p1.pieza1[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza1[1];
-                        tablero[1]=p1.pieza1[0];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
+                if (pieza == 1){
+                    if (tablero[0] == p1.pieza1[0]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
-                    else if(tablero[0]==p1.pieza1[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza1[0];
-                        tablero[1]=p1.pieza1[1];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
-                    }
-                }
-                if (pieza==2){
-                    if (tablero[0]==p1.pieza2[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza2[1];
-                        tablero[1]=p1.pieza2[0];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
-                    }
-                    else if(tablero[0]==p1.pieza2[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza2[0];
-                        tablero[1]=p1.pieza2[1];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
+                    else if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
                 }
-                if (pieza==3){
-                    if (tablero[0]==p1.pieza3[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza3[1];
-                        tablero[1]=p1.pieza3[0];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;
+                if (pieza == 2){
+                    if (tablero[0] == p1.pieza2[0]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza2[1];
+                        tablero[1] = p1.pieza2[0];
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
-                    else if(tablero[0]==p1.pieza3[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza3[0];
-                        tablero[1]=p1.pieza3[1];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;
-                    }
-                }
-                if (pieza==4){
-                    if (tablero[0]==p1.pieza4[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza4[1];
-                        tablero[1]=p1.pieza4[0];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
-                    }
-                    else if(tablero[0]==p1.pieza4[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza4[0];
-                        tablero[1]=p1.pieza4[1];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
+                    else if (tablero[0] == p1.pieza2[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza2[0];
+                        tablero[1] = p1.pieza2[1];
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
                 }
-                if (pieza==5){
-                    if (tablero[0]==p1.pieza5[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza5[1];
-                        tablero[1]=p1.pieza5[0];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
+                if (pieza == 3){
+                    if (tablero[0] == p1.pieza3[0]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza3[1];
+                        tablero[1] = p1.pieza3[0];
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;
                     }
-                    else if(tablero[0]==p1.pieza5[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza5[0];
-                        tablero[1]=p1.pieza5[1];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
-                    }
-                }
-                if (pieza==6){
-                    if (tablero[0]==p1.pieza6[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza6[1];
-                        tablero[1]=p1.pieza6[0];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
-                    }
-                    else if(tablero[0]==p1.pieza6[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza6[0];
-                        tablero[1]=p1.pieza6[1];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
+                    else if (tablero[0] == p1.pieza3[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza3[0];
+                        tablero[1] = p1.pieza3[1];
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;
                     }
                 }
-                if (pieza==7){
-                    if (tablero[0]==p1.pieza7[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza7[1];
-                        tablero[1]=p1.pieza7[0];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                if (pieza == 4){
+                    if (tablero[0] == p1.pieza4[0]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza4[1];
+                        tablero[1] = p1.pieza4[0];
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
                     }
-                    else if(tablero[0]==p1.pieza7[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p1.pieza7[0];
-                        tablero[1]=p1.pieza7[1];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                    else if (tablero[0] == p1.pieza4[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza4[0];
+                        tablero[1] = p1.pieza4[1];
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
+                    }
+                }
+                if (pieza == 5){
+                    if (tablero[0] == p1.pieza5[0]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza5[1];
+                        tablero[1] = p1.pieza5[0];
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
+                    }
+                    else if (tablero[0] == p1.pieza5[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza5[0];
+                        tablero[1] = p1.pieza5[1];
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
+                    }
+                }
+                if (pieza == 6){
+                    if (tablero[0] == p1.pieza6[0]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza6[1];
+                        tablero[1] = p1.pieza6[0];
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
+                    }
+                    else if (tablero[0] == p1.pieza6[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza6[0];
+                        tablero[1] = p1.pieza6[1];
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
+                    }
+                }
+                if (pieza == 7){
+                    if (tablero[0] == p1.pieza7[0]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza7[1];
+                        tablero[1] = p1.pieza7[0];
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
+                    }
+                    else if (tablero[0] == p1.pieza7[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza7[0];
+                        tablero[1] = p1.pieza7[1];
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
                     }
                 }
                 if (pieza == 8){
                     if (tablero[1] == p1.pieza1[0]){
-                        tablero[2] = p1.pieza1[0];
-                        tablero[3] = p1.pieza1[1];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
+                        tablero[2]  =  p1.pieza1[0];
+                        tablero[3]  =  p1.pieza1[1];
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
                     else if (tablero[1] == p1.pieza1[1]){
                         tablero[2] = p1.pieza1[1];
                         tablero[3] = p1.pieza1[0];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 9){
-                    if(tablero[1] == p1.pieza2[0]){
+                    if (tablero[1] == p1.pieza2[0]){
                         tablero[2] = p1.pieza2[0];
                         tablero[3] = p1.pieza2[1];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
-                    else if(tablero[1] == p1.pieza2[1]){
+                    else if (tablero[1] == p1.pieza2[1]){
                         tablero[2] = p1.pieza2[1];
                         tablero[3] = p1.pieza2[0];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 10){
-                    if(tablero[1] == p1.pieza3[0]){
+                    if (tablero[1] == p1.pieza3[0]){
                         tablero[2] = p1.pieza3[0];
                         tablero[3] = p1.pieza3[1];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;
                     }
-                    else if(tablero[1] == p1.pieza3[1]){
+                    else if (tablero[1] == p1.pieza3[1]){
                         tablero[2] = p1.pieza3[1];
                         tablero[3] = p1.pieza3[0];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;
                     }
                 }
                 if (pieza == 11){
-                    if(tablero[1] == p1.pieza4[0]){
+                    if (tablero[1] == p1.pieza4[0]){
                         tablero[2] = p1.pieza4[0];
                         tablero[3] = p1.pieza4[1];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
                     }
-                    else if(tablero[1] == p1.pieza4[1]){
+                    else if (tablero[1] == p1.pieza4[1]){
                         tablero[2] = p1.pieza4[1];
                         tablero[3] = p1.pieza4[0];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 12){
-                    if(tablero[1] == p1.pieza5[0]){
+                    if (tablero[1] == p1.pieza5[0]){
                         tablero[2] = p1.pieza5[0];
                         tablero[3] = p1.pieza5[1];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
                     }
-                    else if(tablero[1] == p1.pieza5[1]){
+                    else if (tablero[1] == p1.pieza5[1]){
                         tablero[2] = p1.pieza5[1];
                         tablero[3] = p1.pieza5[0];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 13){
-                    if(tablero[1] == p1.pieza6[0]){
+                    if (tablero[1] == p1.pieza6[0]){
                         tablero[2] = p1.pieza6[0];
                         tablero[3] = p1.pieza6[1];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
                     }
                     else if (tablero[1] == p1.pieza6[1]){
                         tablero[2] = p1.pieza6[1];
                         tablero[3] = p1.pieza6[0];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 14){
-                    if(tablero[1] == p1.pieza7[0]){
+                    if (tablero[1] == p1.pieza7[0]){
                         tablero[2] = p1.pieza7[0];
                         tablero[3] = p1.pieza7[1];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
                     }
-                    else if(tablero[1] == p1.pieza7[1]){
+                    else if (tablero[1] == p1.pieza7[1]){
                         tablero[2] = p1.pieza7[1];
                         tablero[3] = p1.pieza7[0];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
                     }
                 }
                 write(pipe_p0[1], &tablero[0], sizeof(int));
@@ -1061,49 +1053,49 @@ int main(){
                 write(pipe_p0[1], &tablero[2], sizeof(int));
                 write(pipe_p0[1], &tablero[3], sizeof(int));
             }
-            //jugda enésima
+            // Proximas jugadas 
             else {
                 pieza = jugada(&p1,tablero[0],tablero[3]);
                 if (pieza == 1){
-                    if(tablero[0] == p1.pieza1[0]){
+                    if (tablero[0] == p1.pieza1[0]){
                         tablero[1] = p1.pieza1[0];
                         tablero[0] = p1.pieza1[1];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
-                    else if(tablero[0] == p1.pieza1[1]){
+                    else if (tablero[0] == p1.pieza1[1]){
                         tablero[0] = p1.pieza1[0];
                         tablero[1] = p1.pieza1[1];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 2){
-                    if(tablero[0] == p1.pieza2[0]){
+                    if (tablero[0] == p1.pieza2[0]){
                         tablero[1] = p1.pieza2[0];
                         tablero[0] = p1.pieza2[1];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
-                    else if(tablero[0] == p1.pieza2[1]){
+                    else if (tablero[0] == p1.pieza2[1]){
                         tablero[0] = p1.pieza2[0];
                         tablero[1] = p1.pieza2[1];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 3){
                     if (tablero[0] == p1.pieza3[0]){
                         tablero[1] = p1.pieza3[0];
                         tablero[0] = p1.pieza3[1];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;
                     }
                     else if (tablero[0] == p1.pieza3[1]){
                         tablero[0] = p1.pieza3[0];
                         tablero[1] = p1.pieza3[1];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;
                     }
 
                 }
@@ -1111,164 +1103,164 @@ int main(){
                     if (tablero[0] == p1.pieza4[0]){
                         tablero[1] = p1.pieza4[0];
                         tablero[0] = p1.pieza4[1];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
                     }
                     else if (tablero[0] == p1.pieza4[1]){
                         tablero[0] = p1.pieza4[0];
                         tablero[1] = p1.pieza4[1];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 5){
                     if (tablero[0] == p1.pieza5[0]){
                         tablero[1] = p1.pieza5[0];
                         tablero[0] = p1.pieza5[1];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
                     }
                     else if (tablero[0] == p1.pieza5[1]){
                         tablero[0] = p1.pieza5[0];
                         tablero[1] = p1.pieza5[1];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 6){
-                    if(tablero[0] == p1.pieza6[0]){
+                    if (tablero[0] == p1.pieza6[0]){
                         tablero[1] = p1.pieza6[0];
                         tablero[0] = p1.pieza6[1];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
                     }
-                    else if(tablero[0] == p1.pieza6[1]){
+                    else if (tablero[0] == p1.pieza6[1]){
                         tablero[0] = p1.pieza6[0];
                         tablero[1] = p1.pieza6[1];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
                     }
                 }
-                if (pieza==7){
+                if (pieza ==7){
                     if (tablero[0] == p1.pieza7[0]){
                         tablero[1] = p1.pieza7[0];
                         tablero[0] = p1.pieza7[1];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
                     }
                     else if (tablero[0] == p1.pieza7[1]){
                         tablero[0] = p1.pieza7[0];
                         tablero[1] = p1.pieza7[1];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
                     }
                 }
                 if (pieza == 8){
                     if (tablero[3] == p1.pieza1[0]){
                         tablero[2] = p1.pieza1[0];
                         tablero[3] = p1.pieza1[1];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
                     else if (tablero[3] == p1.pieza1[1]){
                         tablero[2] = p1.pieza1[1];
                         tablero[3] = p1.pieza1[0];
-                        p1.pieza1[0]=-2;
-                        p1.pieza1[1]=-2;
+                        p1.pieza1[0] = -2;
+                        p1.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 9){
                     if (tablero[3] == p1.pieza2[0]){
                         tablero[2] = p1.pieza2[0];
                         tablero[3] = p1.pieza2[1];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
                     else if (tablero[3] == p1.pieza2[1]){
                         tablero[2] = p1.pieza2[1];
                         tablero[3] = p1.pieza2[0];
-                        p1.pieza2[0]=-2;
-                        p1.pieza2[1]=-2;
+                        p1.pieza2[0] = -2;
+                        p1.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 10){
-                    if(tablero[3] == p1.pieza3[0]){
+                    if (tablero[3] == p1.pieza3[0]){
                         tablero[2] = p1.pieza3[0];
                         tablero[3] = p1.pieza3[1];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;
                     }
-                    else if(tablero[3] == p1.pieza3[1]){
+                    else if (tablero[3] == p1.pieza3[1]){
                         tablero[2] = p1.pieza3[1];
                         tablero[3] = p1.pieza3[0];
-                        p1.pieza3[0]=-2;
-                        p1.pieza3[1]=-2;                        
+                        p1.pieza3[0] = -2;
+                        p1.pieza3[1] = -2;                        
                     }
                 }
                 if (pieza == 11){
                     if (tablero[3] == p1.pieza4[0]){
                         tablero[2] = p1.pieza4[0];
                         tablero[3] = p1.pieza4[1];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
                     }
                     else if (tablero[3] == p1.pieza4[1]){
                         tablero[2] = p1.pieza4[1];
                         tablero[3] = p1.pieza4[0];
-                        p1.pieza4[0]=-2;
-                        p1.pieza4[1]=-2;
+                        p1.pieza4[0] = -2;
+                        p1.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 12){
-                    if(tablero[3] == p1.pieza5[0]){
+                    if (tablero[3] == p1.pieza5[0]){
                         tablero[2] = p1.pieza5[0];
                         tablero[3] = p1.pieza5[1];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
                     }
-                    else if(tablero[3] == p1.pieza5[1]){
+                    else if (tablero[3] == p1.pieza5[1]){
                         tablero[2] = p1.pieza5[1];
                         tablero[3] = p1.pieza5[0];
-                        p1.pieza5[0]=-2;
-                        p1.pieza5[1]=-2;
+                        p1.pieza5[0] = -2;
+                        p1.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 13){
                     if (tablero[3] == p1.pieza6[0]){
                         tablero[2] = p1.pieza6[0];
                         tablero[3] = p1.pieza6[1];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
                     }
                     else if (tablero[3] == p1.pieza6[1]){
-                        tablero[2]=p1.pieza6[1];
-                        tablero[3]=p1.pieza6[0];
-                        p1.pieza6[0]=-2;
-                        p1.pieza6[1]=-2;
+                        tablero[2] = p1.pieza6[1];
+                        tablero[3] = p1.pieza6[0];
+                        p1.pieza6[0] = -2;
+                        p1.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 14){
-                    if(tablero[3] == p1.pieza7[0]){
+                    if (tablero[3] == p1.pieza7[0]){
                         tablero[2] = p1.pieza7[0];
                         tablero[3] = p1.pieza7[1];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
                     }
-                    else if(tablero[3] == p1.pieza7[1]){
+                    else if (tablero[3] == p1.pieza7[1]){
                         tablero[2] = p1.pieza7[1];
                         tablero[3] = p1.pieza7[0];
-                        p1.pieza7[0]=-2;
-                        p1.pieza7[1]=-2;
+                        p1.pieza7[0] = -2;
+                        p1.pieza7[1] = -2;
                     }
                 }
-                if(p1.pieza1[0]==-2&&p1.pieza2[0]==-2&&p1.pieza3[0]==-2&&p1.pieza4[0]==-2&&p1.pieza5[0]==-2&&p1.pieza6[0]==-2&&p1.pieza7[0]==-2){
+                if (p1.pieza1[0] == -2 && p1.pieza2[0] == -2 && p1.pieza3[0] == -2 && p1.pieza4[0] == -2 && p1.pieza5[0] == -2 && p1.pieza6[0] == -2 && p1.pieza7[0] == -2){
                     menor=11;
                     write(pipe_p0[1], &menor, sizeof(int));
                     write(pipe_p0[1], &menor, sizeof(int)); 
                     write(pipe_p0[1], &menor, sizeof(int));
                     write(pipe_p0[1], &menor, sizeof(int));       
                 }
-                else{
+                else {
                     write(pipe_p0[1], &tablero[0], sizeof(int));
                     write(pipe_p0[1], &tablero[1], sizeof(int));
                     write(pipe_p0[1], &tablero[2], sizeof(int));
@@ -1282,49 +1274,49 @@ int main(){
             read(pipe_1p[0], &tablero[1], sizeof(int));
             read(pipe_1p[0], &tablero[2], sizeof(int));
             read(pipe_1p[0], &tablero[3], sizeof(int));
-            if (tablero[0]==99){
-                sumap1=p2.pieza1[0]+p2.pieza1[1];
+            if (tablero[0] == 99){
+                sumap1 = p2.pieza1[0]+p2.pieza1[1];
                 if (sumap1<0){
                     sumap1=99;
 
                 }
                 menor=sumap1;
-                sumap2=p2.pieza2[0]+p2.pieza2[1];
+                sumap2 = p2.pieza2[0]+p2.pieza2[1];
                 if (sumap2<0){
                     sumap2=99;
                 }
                 if (sumap2<menor){
                     menor=sumap2;
                 }
-                sumap3=p2.pieza3[0]+p2.pieza3[1];
+                sumap3 = p2.pieza3[0]+p2.pieza3[1];
                 if (sumap3<0){
                     sumap3=99;
                 }
                 if (sumap3<menor){
                     menor=sumap3;
                 }
-                sumap4=p2.pieza4[0]+p2.pieza4[1];
+                sumap4 = p2.pieza4[0]+p2.pieza4[1];
                 if (sumap4<0){
                     sumap4=99;
                 }
                 if (sumap4<menor){
                     menor=sumap4;
                 }
-                sumap5=p2.pieza5[0]+p2.pieza5[1];
+                sumap5 = p2.pieza5[0]+p2.pieza5[1];
                 if (sumap5<0){
                     sumap5=99;
                 }
                 if (sumap5<menor){
                     menor=sumap5;
                 }
-                sumap6=p2.pieza6[0]+p2.pieza6[1];
+                sumap6 = p2.pieza6[0]+p2.pieza6[1];
                 if (sumap6<0){
                     sumap6=99;
                 }
                 if (sumap6<menor){
                     menor=sumap6;
                 }
-                sumap7=p2.pieza7[0]+p2.pieza7[1];
+                sumap7 = p2.pieza7[0]+p2.pieza7[1];
                 if (sumap7<0){
                     sumap7=99;
                 }
@@ -1342,277 +1334,277 @@ int main(){
                 if (mayor == 1){
                     tablero[0] = p2.pieza1[0];
                     tablero[1] = p2.pieza1[1];
-                    p2.pieza1[0]=-2;
-                    p2.pieza1[1]=-2;
+                    p2.pieza1[0] = -2;
+                    p2.pieza1[1] = -2;
                 }
                 else if (mayor == 2){
                     tablero[0] = p2.pieza2[0];
                     tablero[1] = p2.pieza2[1];
-                    p2.pieza2[0]=-2;
-                    p2.pieza2[1]=-2;
+                    p2.pieza2[0] = -2;
+                    p2.pieza2[1] = -2;
 
                 }
                 else if (mayor == 3){
                     tablero[0] = p2.pieza3[0];
                     tablero[1] = p2.pieza3[1];
-                    p2.pieza3[0]=-2;
-                    p2.pieza3[1]=-2;
+                    p2.pieza3[0] = -2;
+                    p2.pieza3[1] = -2;
                 }
                 else if (mayor == 4){
                     tablero[0] = p2.pieza4[0];
                     tablero[1] = p2.pieza4[1];
-                    p2.pieza4[0]=-2;
-                    p2.pieza4[1]=-2;
+                    p2.pieza4[0] = -2;
+                    p2.pieza4[1] = -2;
 
                 }
-                else if(mayor == 5){
+                else if (mayor == 5){
                     tablero[0] = p2.pieza5[0];
                     tablero[1] = p2.pieza5[1];
-                    p2.pieza5[0]=-2;
-                    p2.pieza5[1]=-2;
+                    p2.pieza5[0] = -2;
+                    p2.pieza5[1] = -2;
                 }
-                else if(mayor == 6){
+                else if (mayor == 6){
                     tablero[0] = p2.pieza6[0];
                     tablero[1] = p2.pieza6[1];
-                    p2.pieza6[0]=-2;
-                    p2.pieza6[1]=-2;
+                    p2.pieza6[0] = -2;
+                    p2.pieza6[1] = -2;
                 }
-                else if(mayor == 7){
+                else if (mayor == 7){
                     tablero[0] = p2.pieza7[0];
                     tablero[1] = p2.pieza7[1];
-                    p2.pieza7[0]=-2;
-                    p2.pieza7[1]=-2;
+                    p2.pieza7[0] = -2;
+                    p2.pieza7[1] = -2;
                 }
                 write(pipe_p1[1], &tablero[0], sizeof(int));
                 write(pipe_p1[1], &tablero[1], sizeof(int)); 
                 write(pipe_p1[1], &tablero[2], sizeof(int));
                 write(pipe_p1[1], &tablero[3], sizeof(int)); 
             }
-            //si es la segunda jugada después de la primera pieza
+            // Jugada N° 2
             else if (tablero[2] == -1){
                 pieza = jugada(&p2,-1,tablero[1]);
-                if (pieza==1){
-                    if (tablero[0]==p2.pieza1[0]){
+                if (pieza ==1){
+                    if (tablero[0] == p2.pieza1[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza1[1];
-                        tablero[1]=p2.pieza1[0];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;
+                        tablero[0] = p2.pieza1[1];
+                        tablero[1] = p2.pieza1[0];
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;
                     }
-                    else if(tablero[0]==p2.pieza1[1]){
+                    else if (tablero[0] == p2.pieza1[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza1[0];
-                        tablero[1]=p2.pieza1[1];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;
-                    }
-                }
-                if (pieza==2){
-                    if (tablero[0]==p2.pieza2[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza2[1];
-                        tablero[1]=p2.pieza2[0];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
-                    }
-                    else if(tablero[0]==p2.pieza2[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza2[0];
-                        tablero[1]=p2.pieza2[1];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
+                        tablero[0] = p2.pieza1[0];
+                        tablero[1] = p2.pieza1[1];
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;
                     }
                 }
-                if (pieza==3){
-                    if (tablero[0]==p2.pieza3[0]){
+                if (pieza ==2){
+                    if (tablero[0] == p2.pieza2[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza3[1];
-                        tablero[1]=p2.pieza3[0];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
+                        tablero[0] = p2.pieza2[1];
+                        tablero[1] = p2.pieza2[0];
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
-                    else if(tablero[0]==p2.pieza3[1]){
+                    else if (tablero[0] == p2.pieza2[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza3[0];
-                        tablero[1]=p2.pieza3[1];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
-                    }
-                }
-                if (pieza==4){
-                    if (tablero[0]==p2.pieza4[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza4[1];
-                        tablero[1]=p2.pieza4[0];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
-                    }
-                    else if(tablero[0]==p2.pieza4[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza4[0];
-                        tablero[1]=p2.pieza4[1];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
+                        tablero[0] = p2.pieza2[0];
+                        tablero[1] = p2.pieza2[1];
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
                 }
-                if (pieza==5){
-                    if (tablero[0]==p2.pieza5[0]){
+                if (pieza ==3){
+                    if (tablero[0] == p2.pieza3[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza5[1];
-                        tablero[1]=p2.pieza5[0];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
+                        tablero[0] = p2.pieza3[1];
+                        tablero[1] = p2.pieza3[0];
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
-                    else if(tablero[0]==p2.pieza5[1]){
+                    else if (tablero[0] == p2.pieza3[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza5[0];
-                        tablero[1]=p2.pieza5[1];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
-                    }
-                }
-                if (pieza==6){
-                    if (tablero[0]==p2.pieza6[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza6[1];
-                        tablero[1]=p2.pieza6[0];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
-                    }
-                    else if(tablero[0]==p2.pieza6[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza6[0];
-                        tablero[1]=p2.pieza6[1];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
+                        tablero[0] = p2.pieza3[0];
+                        tablero[1] = p2.pieza3[1];
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
                 }
-                if (pieza==7){
-                    if (tablero[0]==p2.pieza7[0]){
+                if (pieza ==4){
+                    if (tablero[0] == p2.pieza4[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza7[1];
-                        tablero[1]=p2.pieza7[0];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        tablero[0] = p2.pieza4[1];
+                        tablero[1] = p2.pieza4[0];
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
                     }
-                    else if(tablero[0]==p2.pieza7[1]){
+                    else if (tablero[0] == p2.pieza4[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p2.pieza7[0];
-                        tablero[1]=p2.pieza7[1];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        tablero[0] = p2.pieza4[0];
+                        tablero[1] = p2.pieza4[1];
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
+                    }
+                }
+                if (pieza ==5){
+                    if (tablero[0] == p2.pieza5[0]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p2.pieza5[1];
+                        tablero[1] = p2.pieza5[0];
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
+                    }
+                    else if (tablero[0] == p2.pieza5[1]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p2.pieza5[0];
+                        tablero[1] = p2.pieza5[1];
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
+                    }
+                }
+                if (pieza ==6){
+                    if (tablero[0] == p2.pieza6[0]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p2.pieza6[1];
+                        tablero[1] = p2.pieza6[0];
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
+                    }
+                    else if (tablero[0] == p2.pieza6[1]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p2.pieza6[0];
+                        tablero[1] = p2.pieza6[1];
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
+                    }
+                }
+                if (pieza ==7){
+                    if (tablero[0] == p2.pieza7[0]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p2.pieza7[1];
+                        tablero[1] = p2.pieza7[0];
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
+                    }
+                    else if (tablero[0] == p2.pieza7[1]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p2.pieza7[0];
+                        tablero[1] = p2.pieza7[1];
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
                     }
                 }
                 if (pieza == 8){
                     if (tablero[1] == p2.pieza1[0]){
                         tablero[2] = p2.pieza1[0];
                         tablero[3] = p2.pieza1[1];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;
                     }
                     else if (tablero[1] == p2.pieza1[1]){
                         tablero[2] = p2.pieza1[1];
                         tablero[3] = p2.pieza1[0];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 9){
                     if (tablero[1] == p2.pieza2[0]){
                         tablero[2] = p2.pieza2[0];
                         tablero[3] = p2.pieza2[1];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
                     else if (tablero[1] == p2.pieza2[1]){
                         tablero[2] = p2.pieza2[1];
                         tablero[3] = p2.pieza2[0];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 10){
                     if (tablero[1] == p2.pieza3[0]){
                         tablero[2] = p2.pieza3[0];
                         tablero[3] = p2.pieza3[1];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
                     else if (tablero[1] == p2.pieza3[1]){
                         tablero[2] = p2.pieza3[1];
                         tablero[3] = p2.pieza3[0];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
                 }
                 if (pieza == 11){
                     if (tablero[1] == p2.pieza4[0]){
                         tablero[2] = p2.pieza4[0];
                         tablero[3] = p2.pieza4[1];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
                     }
                     else if (tablero[1] == p2.pieza4[1]){
                         tablero[2] = p2.pieza4[1];
                         tablero[3] = p2.pieza4[0];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 12){
                     if (tablero[1] == p2.pieza5[0]){
                         tablero[2] = p2.pieza5[0];
                         tablero[3] = p2.pieza5[1];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
                     }
                     else if (tablero[1] == p2.pieza5[1]){
                         tablero[2] = p2.pieza5[1];
                         tablero[3] = p2.pieza5[0];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 13){
                     if (tablero[1] == p2.pieza6[0]){
                         tablero[2] = p2.pieza6[0];
                         tablero[3] = p2.pieza6[1];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
                     }
                     else if (tablero[1] == p2.pieza6[1]){
                         tablero[2] = p2.pieza6[1];
                         tablero[3] = p2.pieza6[0];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 14){
                     if (tablero[1] == p2.pieza7[0]){
                         tablero[2] = p2.pieza7[0];
                         tablero[3] = p2.pieza7[1];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
                     }
                     else if (tablero[1] == p2.pieza7[1]){
                         tablero[2] = p2.pieza7[1];
                         tablero[3] = p2.pieza7[0];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
                     }
                 }
                 write(pipe_p1[1], &tablero[0], sizeof(int));
@@ -1620,49 +1612,49 @@ int main(){
                 write(pipe_p1[1], &tablero[2], sizeof(int));
                 write(pipe_p1[1], &tablero[3], sizeof(int));
             }
-            //jugda enésima
+            // Proximas jugadas 
             else {
                 pieza = jugada(&p2,tablero[0],tablero[3]);
                 if (pieza == 1){
                     if (tablero[0] == p2.pieza1[0]){
                         tablero[1] = p2.pieza1[0];
                         tablero[0] = p2.pieza1[1];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;
                     }
-                    else if(tablero[0] == p2.pieza1[1]){
+                    else if (tablero[0] == p2.pieza1[1]){
                         tablero[0] = p2.pieza1[0];
                         tablero[1] = p2.pieza1[1];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;                       
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;                       
                     }
                 }
                 if (pieza == 2){
-                    if(tablero[0] == p2.pieza2[0]){
+                    if (tablero[0] == p2.pieza2[0]){
                         tablero[1] = p2.pieza2[0];
                         tablero[0] = p2.pieza2[1];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
                     else if (tablero[0] == p2.pieza2[1]){
                         tablero[0] = p2.pieza2[0];
                         tablero[1] = p2.pieza2[1];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 3){
                     if (tablero[0] == p2.pieza3[0]){
                         tablero[1] = p2.pieza3[0];
                         tablero[0] = p2.pieza3[1];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
                     else if (tablero[0] == p2.pieza3[1]){
                         tablero[0] = p2.pieza3[0];
                         tablero[1] = p2.pieza3[1];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
 
                 }
@@ -1670,164 +1662,164 @@ int main(){
                     if (tablero[0] == p2.pieza4[0]){
                         tablero[1] = p2.pieza4[0];
                         tablero[0] = p2.pieza4[1];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
                     }
                     else if (tablero[0] == p2.pieza4[1]){
                         tablero[0] = p2.pieza4[0];
                         tablero[1] = p2.pieza4[1];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 5){
                     if (tablero[0] == p2.pieza5[0]){
                         tablero[1] = p2.pieza5[0];
                         tablero[0] = p2.pieza5[1];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
                     }
                     else if (tablero[0] == p2.pieza5[1]){
                         tablero[0] = p2.pieza5[0];
                         tablero[1] = p2.pieza5[1];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 6){
                     if (tablero[0] == p2.pieza6[0]){
                         tablero[1] = p2.pieza6[0];
                         tablero[0] = p2.pieza6[1];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
                     }
                     else if (tablero[0] == p2.pieza6[1]){
                         tablero[0] = p2.pieza6[0];
                         tablero[1] = p2.pieza6[1];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 7){
                     if (tablero[0] == p2.pieza7[0]){
                         tablero[1] = p2.pieza7[0];
                         tablero[0] = p2.pieza7[1];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
                     }
                     else if (tablero[0] == p2.pieza7[1]){
                         tablero[0] = p2.pieza7[0];
                         tablero[1] = p2.pieza7[1];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
                     }
                 }
                 if (pieza == 8){
                     if (tablero[3] == p2.pieza1[0]){
                         tablero[2] = p2.pieza1[0];
                         tablero[3] = p2.pieza1[1];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;
                     }
                     else if (tablero[3] == p2.pieza1[1]){
                         tablero[2] = p2.pieza1[1];
                         tablero[3] = p2.pieza1[0];
-                        p2.pieza1[0]=-2;
-                        p2.pieza1[1]=-2;
+                        p2.pieza1[0] = -2;
+                        p2.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 9){
                     if (tablero[3] == p2.pieza2[0]){
                         tablero[2] = p2.pieza2[0];
                         tablero[3] = p2.pieza2[1];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
                     else if (tablero[3] == p2.pieza2[1]){
                         tablero[2] = p2.pieza2[1];
                         tablero[3] = p2.pieza2[0];
-                        p2.pieza2[0]=-2;
-                        p2.pieza2[1]=-2;
+                        p2.pieza2[0] = -2;
+                        p2.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 10){
                     if (tablero[3] == p2.pieza3[0]){
                         tablero[2] = p2.pieza3[0];
                         tablero[3] = p2.pieza3[1];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
                     else if (tablero[3] == p2.pieza3[1]){
                         tablero[2] = p2.pieza3[1];
                         tablero[3] = p2.pieza3[0];
-                        p2.pieza3[0]=-2;
-                        p2.pieza3[1]=-2;
+                        p2.pieza3[0] = -2;
+                        p2.pieza3[1] = -2;
                     }
                 }
                 if (pieza == 11){
                     if (tablero[3] == p2.pieza4[0]){
                         tablero[2] = p2.pieza4[0];
                         tablero[3] = p2.pieza4[1];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
                     }
                     else if (tablero[3] == p2.pieza4[1]){
                         tablero[2] = p2.pieza4[1];
                         tablero[3] = p2.pieza4[0];
-                        p2.pieza4[0]=-2;
-                        p2.pieza4[1]=-2;
+                        p2.pieza4[0] = -2;
+                        p2.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 12){
                     if (tablero[3] == p2.pieza5[0]){
                         tablero[2] = p2.pieza5[0];
                         tablero[3] = p2.pieza5[1];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
                     }
                     else if (tablero[3] == p2.pieza5[1]){
                         tablero[2] = p2.pieza5[1];
                         tablero[3] = p2.pieza5[0];
-                        p2.pieza5[0]=-2;
-                        p2.pieza5[1]=-2;
+                        p2.pieza5[0] = -2;
+                        p2.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 13){
                     if (tablero[3] == p2.pieza6[0]){
                         tablero[2] = p2.pieza6[0];
                         tablero[3] = p2.pieza6[1];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
                     }
                     else if (tablero[3] == p2.pieza6[1]){
                         tablero[2] = p2.pieza6[1];
                         tablero[3] = p2.pieza6[0];
-                        p2.pieza6[0]=-2;
-                        p2.pieza6[1]=-2;
+                        p2.pieza6[0] = -2;
+                        p2.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 14){
                     if (tablero[3] == p2.pieza7[0]){
                         tablero[2] = p2.pieza7[0];
                         tablero[3] = p2.pieza7[1];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
                     }
                     else if (tablero[3] == p2.pieza7[1]){
                         tablero[2] = p2.pieza7[1];
                         tablero[3] = p2.pieza7[0];
-                        p2.pieza7[0]=-2;
-                        p2.pieza7[1]=-2;
+                        p2.pieza7[0] = -2;
+                        p2.pieza7[1] = -2;
                     }
                 }
-                if(p2.pieza1[0]==-2&&p2.pieza2[0]==-2&&p2.pieza3[0]==-2&&p2.pieza4[0]==-2&&p2.pieza5[0]==-2&&p2.pieza6[0]==-2&&p2.pieza7[0]==-2){
+                if (p2.pieza1[0] == -2 && p2.pieza2[0] == -2 && p2.pieza3[0] == -2 && p2.pieza4[0] == -2 && p2.pieza5[0] == -2 && p2.pieza6[0] == -2 && p2.pieza7[0] == -2){
                     menor=12;
                     write(pipe_p1[1], &menor, sizeof(int));
                     write(pipe_p1[1], &menor, sizeof(int)); 
                     write(pipe_p1[1], &menor, sizeof(int));
                     write(pipe_p1[1], &menor, sizeof(int));       
                 }
-                else{
+                else {
                     write(pipe_p1[1], &tablero[0], sizeof(int));
                     write(pipe_p1[1], &tablero[1], sizeof(int));
                     write(pipe_p1[1], &tablero[2], sizeof(int));
@@ -1843,49 +1835,49 @@ int main(){
             read(pipe_2p[0], &tablero[1], sizeof(int));
             read(pipe_2p[0], &tablero[2], sizeof(int));
             read(pipe_2p[0], &tablero[3], sizeof(int));
-            if (tablero[0]==99){
-                sumap1=p3.pieza1[0]+p3.pieza1[1];
+            if (tablero[0] == 99){
+                sumap1 = p3.pieza1[0]+p3.pieza1[1];
                 if (sumap1<0){
                     sumap1=99;
 
                 }
                 menor=sumap1;
-                sumap2=p3.pieza2[0]+p3.pieza2[1];
+                sumap2 = p3.pieza2[0]+p3.pieza2[1];
                 if (sumap2<0){
                     sumap2=99;
                 }
                 if (sumap2<menor){
                     menor=sumap2;
                 }
-                sumap3=p3.pieza3[0]+p3.pieza3[1];
+                sumap3 = p3.pieza3[0]+p3.pieza3[1];
                 if (sumap3<0){
                     sumap3=99;
                 }
                 if (sumap3<menor){
                     menor=sumap3;
                 }
-                sumap4=p3.pieza4[0]+p3.pieza4[1];
+                sumap4 = p3.pieza4[0]+p3.pieza4[1];
                 if (sumap4<0){
                     sumap4=99;
                 }
                 if (sumap4<menor){
                     menor=sumap4;
                 }
-                sumap5=p3.pieza5[0]+p3.pieza5[1];
+                sumap5 = p3.pieza5[0]+p3.pieza5[1];
                 if (sumap5<0){
                     sumap5=99;
                 }
                 if (sumap5<menor){
                     menor=sumap5;
                 }
-                sumap6=p3.pieza6[0]+p3.pieza6[1];
+                sumap6 = p3.pieza6[0]+p3.pieza6[1];
                 if (sumap6<0){
                     sumap6=99;
                 }
                 if (sumap6<menor){
                     menor=sumap6;
                 }
-                sumap7=p3.pieza7[0]+p3.pieza7[1];
+                sumap7 = p3.pieza7[0]+p3.pieza7[1];
                 if (sumap7<0){
                     sumap7=99;
                 }
@@ -1903,276 +1895,276 @@ int main(){
                 if (mayor == 1){
                     tablero[0] = p3.pieza1[0];
                     tablero[1] = p3.pieza1[1];
-                    p3.pieza1[0]=-2;
-                    p3.pieza1[1]=-2;
+                    p3.pieza1[0] = -2;
+                    p3.pieza1[1] = -2;
                 }
                 else if (mayor == 2){
                     tablero[0] = p3.pieza2[0];
                     tablero[1] = p3.pieza2[1];
-                    p3.pieza2[0]=-2;
-                    p3.pieza2[1]=-2;
+                    p3.pieza2[0] = -2;
+                    p3.pieza2[1] = -2;
 
                 }
                 else if (mayor == 3){
                     tablero[0] = p3.pieza3[0];
                     tablero[1] = p3.pieza3[1];
-                    p3.pieza3[0]=-2;
-                    p3.pieza3[1]=-2;
+                    p3.pieza3[0] = -2;
+                    p3.pieza3[1] = -2;
                 }
                 else if (mayor == 4){
                     tablero[0] = p3.pieza4[0];
                     tablero[1] = p3.pieza4[1];
-                    p3.pieza4[0]=-2;
-                    p3.pieza4[1]=-2;
+                    p3.pieza4[0] = -2;
+                    p3.pieza4[1] = -2;
                 }
                 else if (mayor == 5){
                     tablero[0] = p3.pieza5[0];
                     tablero[1] = p3.pieza5[1];
-                    p3.pieza5[0]=-2;
-                    p3.pieza5[1]=-2;
+                    p3.pieza5[0] = -2;
+                    p3.pieza5[1] = -2;
                 }
                 else if (mayor == 6){
                     tablero[0] = p3.pieza6[0];
                     tablero[1] = p3.pieza6[1];
-                    p3.pieza6[0]=-2;
-                    p3.pieza6[1]=-2;
+                    p3.pieza6[0] = -2;
+                    p3.pieza6[1] = -2;
                 }
                 else if (mayor == 7){
                     tablero[0] = p3.pieza7[0];
                     tablero[1] = p3.pieza7[1];
-                    p3.pieza7[0]=-2;
-                    p3.pieza7[1]=-2;
+                    p3.pieza7[0] = -2;
+                    p3.pieza7[1] = -2;
                 }
                 write(pipe_p2[1], &tablero[0], sizeof(int));
                 write(pipe_p2[1], &tablero[1], sizeof(int)); 
                 write(pipe_p2[1], &tablero[2], sizeof(int));
                 write(pipe_p2[1], &tablero[3], sizeof(int)); 
             }
-            //si es la segunda jugada después de la primera pieza
+            // Jugada N° 2
             else if (tablero[2] == -1){
                 pieza = jugada(&p3, -1, tablero[1]);
-                if (pieza==1){
-                    if (tablero[0]==p3.pieza1[0]){
+                if (pieza ==1){
+                    if (tablero[0] == p3.pieza1[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza1[1];
-                        tablero[1]=p3.pieza1[0];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
+                        tablero[0] = p3.pieza1[1];
+                        tablero[1] = p3.pieza1[0];
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
-                    else if(tablero[0]==p3.pieza1[1]){
+                    else if (tablero[0] == p3.pieza1[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza1[0];
-                        tablero[1]=p3.pieza1[1];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
-                    }
-                }
-                if (pieza==2){
-                    if (tablero[0]==p3.pieza2[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza2[1];
-                        tablero[1]=p3.pieza2[0];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
-                    }
-                    else if(tablero[0]==p3.pieza2[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza2[0];
-                        tablero[1]=p3.pieza2[1];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
+                        tablero[0] = p3.pieza1[0];
+                        tablero[1] = p3.pieza1[1];
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
                 }
-                if (pieza==3){
-                    if (tablero[0]==p3.pieza3[0]){
+                if (pieza ==2){
+                    if (tablero[0] == p3.pieza2[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza3[1];
-                        tablero[1]=p3.pieza3[0];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
+                        tablero[0] = p3.pieza2[1];
+                        tablero[1] = p3.pieza2[0];
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
-                    else if(tablero[0]==p3.pieza3[1]){
+                    else if (tablero[0] == p3.pieza2[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza3[0];
-                        tablero[1]=p3.pieza3[1];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
-                    }
-                }
-                if (pieza==4){
-                    if (tablero[0]==p3.pieza4[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza4[1];
-                        tablero[1]=p3.pieza4[0];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
-                    }
-                    else if(tablero[0]==p3.pieza4[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza4[0];
-                        tablero[1]=p3.pieza4[1];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
+                        tablero[0] = p3.pieza2[0];
+                        tablero[1] = p3.pieza2[1];
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
                 }
-                if (pieza==5){
-                    if (tablero[0]==p3.pieza5[0]){
+                if (pieza ==3){
+                    if (tablero[0] == p3.pieza3[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza5[1];
-                        tablero[1]=p3.pieza5[0];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
+                        tablero[0] = p3.pieza3[1];
+                        tablero[1] = p3.pieza3[0];
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
-                    else if(tablero[0]==p3.pieza5[1]){
+                    else if (tablero[0] == p3.pieza3[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza5[0];
-                        tablero[1]=p3.pieza5[1];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
-                    }
-                }
-                if (pieza==6){
-                    if (tablero[0]==p3.pieza6[0]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza6[1];
-                        tablero[1]=p3.pieza6[0];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
-                    }
-                    else if(tablero[0]==p3.pieza6[1]){
-                        tablero[2]=tablero[0];
-                        tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza6[0];
-                        tablero[1]=p3.pieza6[1];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
+                        tablero[0] = p3.pieza3[0];
+                        tablero[1] = p3.pieza3[1];
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
                 }
-                if (pieza==7){
-                    if (tablero[0]==p3.pieza7[0]){
+                if (pieza ==4){
+                    if (tablero[0] == p3.pieza4[0]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza7[1];
-                        tablero[1]=p3.pieza7[0];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        tablero[0] = p3.pieza4[1];
+                        tablero[1] = p3.pieza4[0];
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
                     }
-                    else if(tablero[0]==p3.pieza7[1]){
+                    else if (tablero[0] == p3.pieza4[1]){
                         tablero[2]=tablero[0];
                         tablero[3]=tablero[1];
-                        tablero[0]=p3.pieza7[0];
-                        tablero[1]=p3.pieza7[1];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        tablero[0] = p3.pieza4[0];
+                        tablero[1] = p3.pieza4[1];
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
+                    }
+                }
+                if (pieza ==5){
+                    if (tablero[0] == p3.pieza5[0]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p3.pieza5[1];
+                        tablero[1] = p3.pieza5[0];
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
+                    }
+                    else if (tablero[0] == p3.pieza5[1]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p3.pieza5[0];
+                        tablero[1] = p3.pieza5[1];
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
+                    }
+                }
+                if (pieza ==6){
+                    if (tablero[0] == p3.pieza6[0]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p3.pieza6[1];
+                        tablero[1] = p3.pieza6[0];
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
+                    }
+                    else if (tablero[0] == p3.pieza6[1]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p3.pieza6[0];
+                        tablero[1] = p3.pieza6[1];
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
+                    }
+                }
+                if (pieza ==7){
+                    if (tablero[0] == p3.pieza7[0]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p3.pieza7[1];
+                        tablero[1] = p3.pieza7[0];
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
+                    }
+                    else if (tablero[0] == p3.pieza7[1]){
+                        tablero[2]=tablero[0];
+                        tablero[3]=tablero[1];
+                        tablero[0] = p3.pieza7[0];
+                        tablero[1] = p3.pieza7[1];
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
                     }
                 }
                 if (pieza == 8){
                     if (tablero[1] == p3.pieza1[0]){
                         tablero[2] = p3.pieza1[0];
                         tablero[3] = p3.pieza1[1];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
                     else if (tablero[1] == p3.pieza1[1]){
                         tablero[2] = p3.pieza1[1];
                         tablero[3] = p3.pieza1[0];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 9){
                     if (tablero[1] == p3.pieza2[0]){
                         tablero[2] = p3.pieza2[0];
                         tablero[3] = p3.pieza2[1];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
                     else if (tablero[1] == p3.pieza2[1]){
                         tablero[2] = p3.pieza2[1];
                         tablero[3] = p3.pieza2[0];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 10){
                     if (tablero[1] == p3.pieza3[0]){
                         tablero[2] = p3.pieza3[0];
                         tablero[3] = p3.pieza3[1];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
                     else if (tablero[1] == p3.pieza3[1]){
                         tablero[2] = p3.pieza3[1];
                         tablero[3] = p3.pieza3[0];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
                 }
                 if (pieza == 11){
                     if (tablero[1] == p3.pieza4[0]){
                         tablero[2] = p3.pieza4[0];
                         tablero[3] = p3.pieza4[1];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
                     }
                     else if (tablero[1] == p3.pieza4[1]){
                         tablero[2] = p3.pieza4[1];
                         tablero[3] = p3.pieza4[0];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 12){
                     if (tablero[1] == p3.pieza5[0]){
                         tablero[2] = p3.pieza5[0];
                         tablero[3] = p3.pieza5[1];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
                     }
                     else if (tablero[1] == p3.pieza5[1]){
                         tablero[2] = p3.pieza5[1];
                         tablero[3] = p3.pieza5[0];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 13){
                     if (tablero[1] == p3.pieza6[0]){
                         tablero[2] = p3.pieza6[0];
                         tablero[3] = p3.pieza6[1];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
                     }
                     else if (tablero[1] == p3.pieza6[1]){
                         tablero[2] = p3.pieza6[1];
                         tablero[3] = p3.pieza6[0];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 14){
                     if (tablero[1] == p3.pieza7[0]){
                         tablero[2] = p3.pieza7[0];
                         tablero[3] = p3.pieza7[1];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
                     }
                     else if (tablero[1] == p3.pieza7[1]){
                         tablero[2] = p3.pieza7[1];
                         tablero[3] = p3.pieza7[0];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
                     }
                 }
                 write(pipe_p2[1], &tablero[0], sizeof(int));
@@ -2180,49 +2172,49 @@ int main(){
                 write(pipe_p2[1], &tablero[2], sizeof(int));
                 write(pipe_p2[1], &tablero[3], sizeof(int));
             }
-            //jugda enésima
+            // Proximas jugadas
             else {
                 pieza = jugada(&p3,tablero[0],tablero[3]);
                 if (pieza == 1){
                     if (tablero[0] == p3.pieza1[0]){
                         tablero[1] = p3.pieza1[0];
                         tablero[0] = p3.pieza1[1];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
                     else if (tablero[0] == p3.pieza1[1]){
                         tablero[0] = p3.pieza1[0];
                         tablero[1] = p3.pieza1[1];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 2){
                     if (tablero[0] == p3.pieza2[0]){
                         tablero[1] = p3.pieza2[0];
                         tablero[0] = p3.pieza2[1];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
                     else if (tablero[0] == p3.pieza2[1]){
                         tablero[0] = p3.pieza2[0];
                         tablero[1] = p3.pieza2[1];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 3){
                     if (tablero[0] == p3.pieza3[0]){
                         tablero[1] = p3.pieza3[0];
                         tablero[0] = p3.pieza3[1];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
                     else if (tablero[0] == p3.pieza3[1]){
                         tablero[0] = p3.pieza3[0];
                         tablero[1] = p3.pieza3[1];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
 
                 }
@@ -2230,164 +2222,164 @@ int main(){
                     if (tablero[0] == p3.pieza4[0]){
                         tablero[1] = p3.pieza4[0];
                         tablero[0] = p3.pieza4[1];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
                     }
                     else if (tablero[0] == p3.pieza4[1]){
                         tablero[0] = p3.pieza4[0];
                         tablero[1] = p3.pieza4[1];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 5){
                     if (tablero[0] == p3.pieza5[0]){
                         tablero[1] = p3.pieza5[0];
                         tablero[0] = p3.pieza5[1];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
                     }
                     else if (tablero[0] == p3.pieza5[1]){
                         tablero[0] = p3.pieza5[0];
                         tablero[1] = p3.pieza5[1];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 6){
                     if (tablero[0] == p3.pieza6[0]){
                         tablero[1] = p3.pieza6[0];
                         tablero[0] = p3.pieza6[1];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
                     }
                     else if (tablero[0] == p3.pieza6[1]){
                         tablero[0] = p3.pieza6[0];
                         tablero[1] = p3.pieza6[1];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 7){
                     if (tablero[0] == p3.pieza7[0]){
                         tablero[1] = p3.pieza7[0];
                         tablero[0] = p3.pieza7[1];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
                     }
                     else if (tablero[0] == p3.pieza7[1]){
                         tablero[0] = p3.pieza7[0];
                         tablero[1] = p3.pieza7[1];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
                     }
                 }
                 if (pieza == 8){
                     if (tablero[3] == p3.pieza1[0]){
                         tablero[2] = p3.pieza1[0];
                         tablero[3] = p3.pieza1[1];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
                     else if (tablero[3] == p3.pieza1[1]){
                         tablero[2] = p3.pieza1[1];
                         tablero[3] = p3.pieza1[0];
-                        p3.pieza1[0]=-2;
-                        p3.pieza1[1]=-2;
+                        p3.pieza1[0] = -2;
+                        p3.pieza1[1] = -2;
                     }
                 }
                 if (pieza == 9){
                     if (tablero[3] == p3.pieza2[0]){
                         tablero[2] = p3.pieza2[0];
                         tablero[3] = p3.pieza2[1];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
                     else if (tablero[3] == p3.pieza2[1]){
                         tablero[2] = p3.pieza2[1];
                         tablero[3] = p3.pieza2[0];
-                        p3.pieza2[0]=-2;
-                        p3.pieza2[1]=-2;
+                        p3.pieza2[0] = -2;
+                        p3.pieza2[1] = -2;
                     }
                 }
                 if (pieza == 10){
                     if (tablero[3] == p3.pieza3[0]){
                         tablero[2] = p3.pieza3[0];
                         tablero[3] = p3.pieza3[1];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
                     else if (tablero[3] == p3.pieza3[1]){
                         tablero[2] = p3.pieza3[1];
                         tablero[3] = p3.pieza3[0];
-                        p3.pieza3[0]=-2;
-                        p3.pieza3[1]=-2;
+                        p3.pieza3[0] = -2;
+                        p3.pieza3[1] = -2;
                     }
                 }
                 if (pieza == 11){
                     if (tablero[3] == p3.pieza4[0]){
                         tablero[2] = p3.pieza4[0];
                         tablero[3] = p3.pieza4[1];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
                     }
                     else if (tablero[3] == p3.pieza4[1]){
                         tablero[2] = p3.pieza4[1];
                         tablero[3] = p3.pieza4[0];
-                        p3.pieza4[0]=-2;
-                        p3.pieza4[1]=-2;
+                        p3.pieza4[0] = -2;
+                        p3.pieza4[1] = -2;
                     }
                 }
                 if (pieza == 12){
                     if (tablero[3] == p3.pieza5[0]){
                         tablero[2] = p3.pieza5[0];
                         tablero[3] = p3.pieza5[1];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
                     }
                     else if (tablero[3] == p3.pieza5[1]){
                         tablero[2] = p3.pieza5[1];
                         tablero[3] = p3.pieza5[0];
-                        p3.pieza5[0]=-2;
-                        p3.pieza5[1]=-2;
+                        p3.pieza5[0] = -2;
+                        p3.pieza5[1] = -2;
                     }
                 }
                 if (pieza == 13){
                     if (tablero[3] == p3.pieza6[0]){
                         tablero[2] = p3.pieza6[0];
                         tablero[3] = p3.pieza6[1];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
                     }
                     else if (tablero[3] == p3.pieza6[1]){
                         tablero[2] = p3.pieza6[1];
                         tablero[3] = p3.pieza6[0];
-                        p3.pieza6[0]=-2;
-                        p3.pieza6[1]=-2;
+                        p3.pieza6[0] = -2;
+                        p3.pieza6[1] = -2;
                     }
                 }
                 if (pieza == 14){
                     if (tablero[3] == p3.pieza7[0]){
                         tablero[2] = p3.pieza7[0];
                         tablero[3] = p3.pieza7[1];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
                     }
                     else if (tablero[3] == p3.pieza7[1]){
                         tablero[2] = p3.pieza7[1];
                         tablero[3] = p3.pieza7[0];
-                        p3.pieza7[0]=-2;
-                        p3.pieza7[1]=-2;
+                        p3.pieza7[0] = -2;
+                        p3.pieza7[1] = -2;
                     }
                 }
-                if(p3.pieza1[0]==-2&&p3.pieza2[0]==-2&&p3.pieza3[0]==-2&&p3.pieza4[0]==-2&&p3.pieza5[0]==-2&&p3.pieza6[0]==-2&&p3.pieza7[0]==-2){
+                if (p3.pieza1[0] == -2 && p3.pieza2[0] == -2 && p3.pieza3[0] == -2 && p3.pieza4[0] == -2 && p3.pieza5[0] == -2 && p3.pieza6[0] == -2 && p3.pieza7[0] == -2){
                     menor=13;
                     write(pipe_p2[1], &menor, sizeof(int));
                     write(pipe_p2[1], &menor, sizeof(int)); 
                     write(pipe_p2[1], &menor, sizeof(int));
                     write(pipe_p2[1], &menor, sizeof(int));       
                 }
-                else{
+                else {
                     write(pipe_p2[1], &tablero[0], sizeof(int));
                     write(pipe_p2[1], &tablero[1], sizeof(int));
                     write(pipe_p2[1], &tablero[2], sizeof(int));
@@ -2403,215 +2395,215 @@ int main(){
             read(pipe_3p[0], &tablero[3], sizeof(int));
             read(pipe_3p[0], &pieza, sizeof(int));
             read(pipe_3p[0], &sentido, sizeof(int));
-            //rellenar mañana/////////////////////////////////////////////////////////////////////////////////////
-            if(tablero[0]==-1&&tablero[1]==-1&&tablero[2]==-1&&tablero[3]==-1){
+
+            if (tablero[0] == -1 && tablero[1] == -1 && tablero[2] == -1 && tablero[3] == -1){
                 mayor=mayor_pieza(&p4);
-                if(mayor==1){
-                    tablero[0]=p4.pieza1[0];
-                    tablero[1]=p4.pieza1[1];
+                if (mayor==1){
+                    tablero[0] = p4.pieza1[0];
+                    tablero[1] = p4.pieza1[1];
                 }
-                else if(mayor==2){
-                    tablero[0]=p4.pieza2[0];
-                    tablero[1]=p4.pieza2[1];
+                else if (mayor==2){
+                    tablero[0] = p4.pieza2[0];
+                    tablero[1] = p4.pieza2[1];
 
                 }
-                else if(mayor==3){
-                    tablero[0]=p4.pieza3[0];
-                    tablero[1]=p4.pieza3[1];
+                else if (mayor==3){
+                    tablero[0] = p4.pieza3[0];
+                    tablero[1] = p4.pieza3[1];
                 }
-                else if(mayor==4){
-                    tablero[0]=p4.pieza4[0];
-                    tablero[1]=p4.pieza4[1];
+                else if (mayor==4){
+                    tablero[0] = p4.pieza4[0];
+                    tablero[1] = p4.pieza4[1];
 
                 }
-                else if(mayor==5){
-                    tablero[0]=p4.pieza5[0];
-                    tablero[1]=p4.pieza5[1];
+                else if (mayor==5){
+                    tablero[0] = p4.pieza5[0];
+                    tablero[1] = p4.pieza5[1];
                 }
-                else if(mayor==6){
-                    tablero[0]=p4.pieza6[0];
-                    tablero[1]=p4.pieza6[1];
+                else if (mayor==6){
+                    tablero[0] = p4.pieza6[0];
+                    tablero[1] = p4.pieza6[1];
                 }
-                else if(mayor==7){
-                    tablero[0]=p4.pieza7[0];
-                    tablero[1]=p4.pieza7[1];
+                else if (mayor==7){
+                    tablero[0] = p4.pieza7[0];
+                    tablero[1] = p4.pieza7[1];
                 }
                 write(pipe_p3[1], &tablero[0], sizeof(int));
                 write(pipe_p3[1], &tablero[1], sizeof(int)); 
                 write(pipe_p3[1], &tablero[2], sizeof(int));
                 write(pipe_p3[1], &tablero[3], sizeof(int)); 
             }
-            //si es la segunda jugada después de la primera pieza
-            else if(tablero[2]==-1){
-                if(sentido==0){
-                    if (pieza==1){
-                        if (tablero[0]==p4.pieza1[0]){
+            // Jugada N° 2
+            else if (tablero[2] == -1){
+                if (sentido==0){
+                    if (pieza ==1){
+                        if (tablero[0] == p4.pieza1[0]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza1[1];
-                            tablero[1]=p4.pieza1[0];
+                            tablero[0] = p4.pieza1[1];
+                            tablero[1] = p4.pieza1[0];
                         }
-                        else if(tablero[0]==p4.pieza1[1]){
+                        else if (tablero[0] == p4.pieza1[1]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza1[0];
-                            tablero[1]=p4.pieza1[1];
-                        }
-                    }
-                    if (pieza==2){
-                        if (tablero[0]==p4.pieza2[0]){
-                            tablero[2]=tablero[0];
-                            tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza2[1];
-                            tablero[1]=p4.pieza2[0];
-                        }
-                        else if(tablero[0]==p4.pieza2[1]){
-                            tablero[2]=tablero[0];
-                            tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza2[0];
-                            tablero[1]=p4.pieza2[1];
+                            tablero[0] = p4.pieza1[0];
+                            tablero[1] = p4.pieza1[1];
                         }
                     }
-                    if (pieza==3){
-                        if (tablero[0]==p4.pieza3[0]){
+                    if (pieza ==2){
+                        if (tablero[0] == p4.pieza2[0]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza3[1];
-                            tablero[1]=p4.pieza3[0];
+                            tablero[0] = p4.pieza2[1];
+                            tablero[1] = p4.pieza2[0];
                         }
-                        else if(tablero[0]==p4.pieza3[1]){
+                        else if (tablero[0] == p4.pieza2[1]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza3[0];
-                            tablero[1]=p4.pieza3[1];
-                        }
-                    }
-                    if (pieza==4){
-                        if (tablero[0]==p4.pieza4[0]){
-                            tablero[2]=tablero[0];
-                            tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza4[1];
-                            tablero[1]=p4.pieza4[0];
-                        }
-                        else if(tablero[0]==p4.pieza4[1]){
-                            tablero[2]=tablero[0];
-                            tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza4[0];
-                            tablero[1]=p4.pieza4[1];
+                            tablero[0] = p4.pieza2[0];
+                            tablero[1] = p4.pieza2[1];
                         }
                     }
-                    if (pieza==5){
-                        if (tablero[0]==p4.pieza5[0]){
+                    if (pieza ==3){
+                        if (tablero[0] == p4.pieza3[0]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza5[1];
-                            tablero[1]=p4.pieza5[0];
+                            tablero[0] = p4.pieza3[1];
+                            tablero[1] = p4.pieza3[0];
                         }
-                        else if(tablero[0]==p4.pieza5[1]){
+                        else if (tablero[0] == p4.pieza3[1]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza5[0];
-                            tablero[1]=p4.pieza5[1];
-                        }
-                    }
-                    if (pieza==6){
-                        if (tablero[0]==p4.pieza6[0]){
-                            tablero[2]=tablero[0];
-                            tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza6[1];
-                            tablero[1]=p4.pieza6[0];
-                        }
-                        else if(tablero[0]==p4.pieza6[1]){
-                            tablero[2]=tablero[0];
-                            tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza6[0];
-                            tablero[1]=p4.pieza6[1];
+                            tablero[0] = p4.pieza3[0];
+                            tablero[1] = p4.pieza3[1];
                         }
                     }
-                    if (pieza==7){
-                        if (tablero[0]==p4.pieza7[0]){
+                    if (pieza ==4){
+                        if (tablero[0] == p4.pieza4[0]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza7[1];
-                            tablero[1]=p4.pieza7[0];
+                            tablero[0] = p4.pieza4[1];
+                            tablero[1] = p4.pieza4[0];
                         }
-                        else if(tablero[0]==p4.pieza7[1]){
+                        else if (tablero[0] == p4.pieza4[1]){
                             tablero[2]=tablero[0];
                             tablero[3]=tablero[1];
-                            tablero[0]=p4.pieza7[0];
-                            tablero[1]=p4.pieza7[1];
+                            tablero[0] = p4.pieza4[0];
+                            tablero[1] = p4.pieza4[1];
+                        }
+                    }
+                    if (pieza ==5){
+                        if (tablero[0] == p4.pieza5[0]){
+                            tablero[2]=tablero[0];
+                            tablero[3]=tablero[1];
+                            tablero[0] = p4.pieza5[1];
+                            tablero[1] = p4.pieza5[0];
+                        }
+                        else if (tablero[0] == p4.pieza5[1]){
+                            tablero[2]=tablero[0];
+                            tablero[3]=tablero[1];
+                            tablero[0] = p4.pieza5[0];
+                            tablero[1] = p4.pieza5[1];
+                        }
+                    }
+                    if (pieza ==6){
+                        if (tablero[0] == p4.pieza6[0]){
+                            tablero[2]=tablero[0];
+                            tablero[3]=tablero[1];
+                            tablero[0] = p4.pieza6[1];
+                            tablero[1] = p4.pieza6[0];
+                        }
+                        else if (tablero[0] == p4.pieza6[1]){
+                            tablero[2]=tablero[0];
+                            tablero[3]=tablero[1];
+                            tablero[0] = p4.pieza6[0];
+                            tablero[1] = p4.pieza6[1];
+                        }
+                    }
+                    if (pieza ==7){
+                        if (tablero[0] == p4.pieza7[0]){
+                            tablero[2]=tablero[0];
+                            tablero[3]=tablero[1];
+                            tablero[0] = p4.pieza7[1];
+                            tablero[1] = p4.pieza7[0];
+                        }
+                        else if (tablero[0] == p4.pieza7[1]){
+                            tablero[2]=tablero[0];
+                            tablero[3]=tablero[1];
+                            tablero[0] = p4.pieza7[0];
+                            tablero[1] = p4.pieza7[1];
                         }
                     }
                 }
-                if(sentido==1){
-                    if (pieza==1){
-                        if(tablero[1]==p4.pieza1[0]){
-                            tablero[2]=p4.pieza1[0];
-                            tablero[3]=p4.pieza1[1];
+                if (sentido==1){
+                    if (pieza ==1){
+                        if (tablero[1] == p4.pieza1[0]){
+                            tablero[2] = p4.pieza1[0];
+                            tablero[3] = p4.pieza1[1];
                         }
-                        else if(tablero[1]==p4.pieza1[1]){
-                            tablero[2]=p4.pieza1[1];
-                            tablero[3]=p4.pieza1[0];
-                        }
-                    }
-                    if (pieza==2){
-                        if(tablero[1]==p4.pieza2[0]){
-                            tablero[2]=p4.pieza2[0];
-                            tablero[3]=p4.pieza2[1];
-                        }
-                        else if(tablero[1]==p4.pieza2[1]){
-                            tablero[2]=p4.pieza2[1];
-                            tablero[3]=p4.pieza2[0];
+                        else if (tablero[1] == p4.pieza1[1]){
+                            tablero[2] = p4.pieza1[1];
+                            tablero[3] = p4.pieza1[0];
                         }
                     }
-                    if (pieza==3){
-                        if(tablero[1]==p4.pieza3[0]){
-                            tablero[2]=p4.pieza3[0];
-                            tablero[3]=p4.pieza3[1];
+                    if (pieza ==2){
+                        if (tablero[1] == p4.pieza2[0]){
+                            tablero[2] = p4.pieza2[0];
+                            tablero[3] = p4.pieza2[1];
                         }
-                        else if(tablero[1]==p4.pieza3[1]){
-                            tablero[2]=p4.pieza3[1];
-                            tablero[3]=p4.pieza3[0];
-                        }
-                    }
-                    if (pieza==4){
-                        if(tablero[1]==p4.pieza4[0]){
-                            tablero[2]=p4.pieza4[0];
-                            tablero[3]=p4.pieza4[1];
-                        }
-                        else if(tablero[1]==p4.pieza4[1]){
-                            tablero[2]=p4.pieza4[1];
-                            tablero[3]=p4.pieza4[0];
+                        else if (tablero[1] == p4.pieza2[1]){
+                            tablero[2] = p4.pieza2[1];
+                            tablero[3] = p4.pieza2[0];
                         }
                     }
-                    if (pieza==5){
-                        if(tablero[1]==p4.pieza5[0]){
-                            tablero[2]=p4.pieza5[0];
-                            tablero[3]=p4.pieza5[1];
+                    if (pieza ==3){
+                        if (tablero[1] == p4.pieza3[0]){
+                            tablero[2] = p4.pieza3[0];
+                            tablero[3] = p4.pieza3[1];
                         }
-                        else if(tablero[1]==p4.pieza5[1]){
-                            tablero[2]=p4.pieza5[1];
-                            tablero[3]=p4.pieza5[0];
-                        }
-                    }
-                    if (pieza==6){
-                        if(tablero[1]==p4.pieza6[0]){
-                            tablero[2]=p4.pieza6[0];
-                            tablero[3]=p4.pieza6[1];
-                        }
-                        else if(tablero[1]==p4.pieza6[1]){
-                            tablero[2]=p4.pieza6[1];
-                            tablero[3]=p4.pieza6[0];
+                        else if (tablero[1] == p4.pieza3[1]){
+                            tablero[2] = p4.pieza3[1];
+                            tablero[3] = p4.pieza3[0];
                         }
                     }
-                    if (pieza==7){
-                        if(tablero[1]==p4.pieza7[0]){
-                            tablero[2]=p4.pieza7[0];
-                            tablero[3]=p4.pieza7[1];
+                    if (pieza ==4){
+                        if (tablero[1] == p4.pieza4[0]){
+                            tablero[2] = p4.pieza4[0];
+                            tablero[3] = p4.pieza4[1];
                         }
-                        else if(tablero[1]==p4.pieza7[1]){
-                            tablero[2]=p4.pieza7[1];
-                            tablero[3]=p4.pieza7[0];
+                        else if (tablero[1] == p4.pieza4[1]){
+                            tablero[2] = p4.pieza4[1];
+                            tablero[3] = p4.pieza4[0];
+                        }
+                    }
+                    if (pieza ==5){
+                        if (tablero[1] == p4.pieza5[0]){
+                            tablero[2] = p4.pieza5[0];
+                            tablero[3] = p4.pieza5[1];
+                        }
+                        else if (tablero[1] == p4.pieza5[1]){
+                            tablero[2] = p4.pieza5[1];
+                            tablero[3] = p4.pieza5[0];
+                        }
+                    }
+                    if (pieza ==6){
+                        if (tablero[1] == p4.pieza6[0]){
+                            tablero[2] = p4.pieza6[0];
+                            tablero[3] = p4.pieza6[1];
+                        }
+                        else if (tablero[1] == p4.pieza6[1]){
+                            tablero[2] = p4.pieza6[1];
+                            tablero[3] = p4.pieza6[0];
+                        }
+                    }
+                    if (pieza ==7){
+                        if (tablero[1] == p4.pieza7[0]){
+                            tablero[2] = p4.pieza7[0];
+                            tablero[3] = p4.pieza7[1];
+                        }
+                        else if (tablero[1] == p4.pieza7[1]){
+                            tablero[2] = p4.pieza7[1];
+                            tablero[3] = p4.pieza7[0];
                         }
                     }
                 }
@@ -2620,171 +2612,167 @@ int main(){
                 write(pipe_p3[1], &tablero[2], sizeof(int));
                 write(pipe_p3[1], &tablero[3], sizeof(int));
             }
-                //jugda enésima
-            else{
-                if(sentido==0){
-                    if (pieza==1){
-                        if (tablero[0]==p4.pieza1[0]){
-                            tablero[0]=p4.pieza1[1];
-                            tablero[1]=p4.pieza1[0];
+            // Proximas Jugadas
+            else {
+                if (sentido==0){
+                    if (pieza ==1){
+                        if (tablero[0] == p4.pieza1[0]){
+                            tablero[0] = p4.pieza1[1];
+                            tablero[1] = p4.pieza1[0];
                         }
-                        else if(tablero[0]==p4.pieza1[1]){
-                            tablero[0]=p4.pieza1[0];
-                            tablero[1]=p4.pieza1[1];
-                        }
-                    }
-                    if (pieza==2){
-                        if (tablero[0]==p4.pieza2[0]){
-                            tablero[0]=p4.pieza2[1];
-                            tablero[1]=p4.pieza2[0];
-                        }
-                        else if(tablero[0]==p4.pieza2[1]){
-                            tablero[0]=p4.pieza2[0];
-                            tablero[1]=p4.pieza2[1];
+                        else if (tablero[0] == p4.pieza1[1]){
+                            tablero[0] = p4.pieza1[0];
+                            tablero[1] = p4.pieza1[1];
                         }
                     }
-                    if (pieza==3){
-                        if (tablero[0]==p4.pieza3[0]){
-                            tablero[0]=p4.pieza3[1];
-                            tablero[1]=p4.pieza3[0];
+                    if (pieza ==2){
+                        if (tablero[0] == p4.pieza2[0]){
+                            tablero[0] = p4.pieza2[1];
+                            tablero[1] = p4.pieza2[0];
                         }
-                        else if(tablero[0]==p4.pieza3[1]){
-                            tablero[0]=p4.pieza3[0];
-                            tablero[1]=p4.pieza3[1];
-                        }
-                    }
-                    if (pieza==4){
-                        if (tablero[0]==p4.pieza4[0]){
-                            tablero[0]=p4.pieza4[1];
-                            tablero[1]=p4.pieza4[0];
-                        }
-                        else if(tablero[0]==p4.pieza4[1]){
-                            tablero[0]=p4.pieza4[0];
-                            tablero[1]=p4.pieza4[1];
+                        else if (tablero[0] == p4.pieza2[1]){
+                            tablero[0] = p4.pieza2[0];
+                            tablero[1] = p4.pieza2[1];
                         }
                     }
-                    if (pieza==5){
-                        if (tablero[0]==p4.pieza5[0]){
-                            tablero[0]=p4.pieza5[1];
-                            tablero[1]=p4.pieza5[0];
+                    if (pieza ==3){
+                        if (tablero[0] == p4.pieza3[0]){
+                            tablero[0] = p4.pieza3[1];
+                            tablero[1] = p4.pieza3[0];
                         }
-                        else if(tablero[0]==p4.pieza5[1]){
-                            tablero[0]=p4.pieza5[0];
-                            tablero[1]=p4.pieza5[1];
-                        }
-                    }
-                    if (pieza==6){
-                        if (tablero[0]==p4.pieza6[0]){
-                            tablero[0]=p4.pieza6[1];
-                            tablero[1]=p4.pieza6[0];
-                        }
-                        else if(tablero[0]==p4.pieza6[1]){
-                            tablero[0]=p4.pieza6[0];
-                            tablero[1]=p4.pieza6[1];
+                        else if (tablero[0] == p4.pieza3[1]){
+                            tablero[0] = p4.pieza3[0];
+                            tablero[1] = p4.pieza3[1];
                         }
                     }
-                    if (pieza==7){
-                        if (tablero[0]==p4.pieza7[0]){
-                            tablero[0]=p4.pieza7[1];
-                            tablero[1]=p4.pieza7[0];
+                    if (pieza ==4){
+                        if (tablero[0] == p4.pieza4[0]){
+                            tablero[0] = p4.pieza4[1];
+                            tablero[1] = p4.pieza4[0];
                         }
-                        else if(tablero[0]==p4.pieza7[1]){
-                            tablero[0]=p4.pieza7[0];
-                            tablero[1]=p4.pieza7[1];
-                        }
-                    }
-                }
-                if(sentido==1){
-                    if (pieza==1){
-                        if(tablero[3]==p4.pieza1[0]){
-                            tablero[2]=p4.pieza1[0];
-                            tablero[3]=p4.pieza1[1];
-                        }
-                        else if(tablero[3]==p4.pieza1[1]){
-                            tablero[2]=p4.pieza1[1];
-                            tablero[3]=p4.pieza1[0];
+                        else if (tablero[0] == p4.pieza4[1]){
+                            tablero[0] = p4.pieza4[0];
+                            tablero[1] = p4.pieza4[1];
                         }
                     }
-                    if (pieza==2){
-                        if(tablero[3]==p4.pieza2[0]){
-                            tablero[2]=p4.pieza2[0];
-                            tablero[3]=p4.pieza2[1];
+                    if (pieza ==5){
+                        if (tablero[0] == p4.pieza5[0]){
+                            tablero[0] = p4.pieza5[1];
+                            tablero[1] = p4.pieza5[0];
                         }
-                        else if(tablero[3]==p4.pieza2[1]){
-                            tablero[2]=p4.pieza2[1];
-                            tablero[3]=p4.pieza2[0];
-                        }
-                    }
-                    if (pieza==3){
-                        if(tablero[3]==p4.pieza3[0]){
-                            tablero[2]=p4.pieza3[0];
-                            tablero[3]=p4.pieza3[1];
-                        }
-                        else if(tablero[3]==p4.pieza3[1]){
-                            tablero[2]=p4.pieza3[1];
-                            tablero[3]=p4.pieza3[0];
+                        else if (tablero[0] == p4.pieza5[1]){
+                            tablero[0] = p4.pieza5[0];
+                            tablero[1] = p4.pieza5[1];
                         }
                     }
-                    if (pieza==4){
-                        if(tablero[3]==p4.pieza4[0]){
-                            tablero[2]=p4.pieza4[0];
-                            tablero[3]=p4.pieza4[1];
+                    if (pieza ==6){
+                        if (tablero[0] == p4.pieza6[0]){
+                            tablero[0] = p4.pieza6[1];
+                            tablero[1] = p4.pieza6[0];
                         }
-                        else if(tablero[3]==p4.pieza4[1]){
-                            tablero[2]=p4.pieza4[1];
-                            tablero[3]=p4.pieza4[0];
-                        }
-                    }
-                    if (pieza==5){
-                        if(tablero[3]==p4.pieza5[0]){
-                            tablero[2]=p4.pieza5[0];
-                            tablero[3]=p4.pieza5[1];
-                        }
-                        else if(tablero[3]==p4.pieza5[1]){
-                            tablero[2]=p4.pieza5[1];
-                            tablero[3]=p4.pieza5[0];
+                        else if (tablero[0] == p4.pieza6[1]){
+                            tablero[0] = p4.pieza6[0];
+                            tablero[1] = p4.pieza6[1];
                         }
                     }
-                    if (pieza==6){
-                        if(tablero[3]==p4.pieza6[0]){
-                            tablero[2]=p4.pieza6[0];
-                            tablero[3]=p4.pieza6[1];
+                    if (pieza ==7){
+                        if (tablero[0] == p4.pieza7[0]){
+                            tablero[0] = p4.pieza7[1];
+                            tablero[1] = p4.pieza7[0];
                         }
-                        else if(tablero[3]==p4.pieza6[1]){
-                            tablero[2]=p4.pieza6[1];
-                            tablero[3]=p4.pieza6[0];
-                        }
-                    }
-                    if (pieza==7){
-                        if(tablero[3]==p4.pieza7[0]){
-                            tablero[2]=p4.pieza7[0];
-                            tablero[3]=p4.pieza7[1];
-                        }
-                        else if(tablero[3]==p4.pieza7[1]){
-                            tablero[2]=p4.pieza7[1];
-                            tablero[3]=p4.pieza7[0];
+                        else if (tablero[0] == p4.pieza7[1]){
+                            tablero[0] = p4.pieza7[0];
+                            tablero[1] = p4.pieza7[1];
                         }
                     }
                 }
-            if(p3.pieza1[0]==-2&&p3.pieza2[0]==-2&&p3.pieza3[0]==-2&&p3.pieza4[0]==-2&&p3.pieza5[0]==-2&&p3.pieza6[0]==-2&&p3.pieza7[0]==-2){
-                menor=14;
-                write(pipe_p3[1], &menor, sizeof(int));
-                write(pipe_p3[1], &menor, sizeof(int)); 
-                write(pipe_p3[1], &menor, sizeof(int));
-                write(pipe_p3[1], &menor, sizeof(int));       
+                if (sentido == 1){
+                    if (pieza == 1){
+                        if (tablero[3] == p4.pieza1[0]){
+                            tablero[2] = p4.pieza1[0];
+                            tablero[3] = p4.pieza1[1];
+                        }
+                        else if (tablero[3] == p4.pieza1[1]){
+                            tablero[2] = p4.pieza1[1];
+                            tablero[3] = p4.pieza1[0];
+                        }
+                    }
+                    if (pieza ==2){
+                        if (tablero[3] == p4.pieza2[0]){
+                            tablero[2] = p4.pieza2[0];
+                            tablero[3] = p4.pieza2[1];
+                        }
+                        else if (tablero[3] == p4.pieza2[1]){
+                            tablero[2] = p4.pieza2[1];
+                            tablero[3] = p4.pieza2[0];
+                        }
+                    }
+                    if (pieza ==3){
+                        if (tablero[3] == p4.pieza3[0]){
+                            tablero[2] = p4.pieza3[0];
+                            tablero[3] = p4.pieza3[1];
+                        }
+                        else if (tablero[3] == p4.pieza3[1]){
+                            tablero[2] = p4.pieza3[1];
+                            tablero[3] = p4.pieza3[0];
+                        }
+                    }
+                    if (pieza ==4){
+                        if (tablero[3] == p4.pieza4[0]){
+                            tablero[2] = p4.pieza4[0];
+                            tablero[3] = p4.pieza4[1];
+                        }
+                        else if (tablero[3] == p4.pieza4[1]){
+                            tablero[2] = p4.pieza4[1];
+                            tablero[3] = p4.pieza4[0];
+                        }
+                    }
+                    if (pieza ==5){
+                        if (tablero[3] == p4.pieza5[0]){
+                            tablero[2] = p4.pieza5[0];
+                            tablero[3] = p4.pieza5[1];
+                        }
+                        else if (tablero[3] == p4.pieza5[1]){
+                            tablero[2] = p4.pieza5[1];
+                            tablero[3] = p4.pieza5[0];
+                        }
+                    }
+                    if (pieza ==6){
+                        if (tablero[3] == p4.pieza6[0]){
+                            tablero[2] = p4.pieza6[0];
+                            tablero[3] = p4.pieza6[1];
+                        }
+                        else if (tablero[3] == p4.pieza6[1]){
+                            tablero[2] = p4.pieza6[1];
+                            tablero[3] = p4.pieza6[0];
+                        }
+                    }
+                    if (pieza ==7){
+                        if (tablero[3] == p4.pieza7[0]){
+                            tablero[2] = p4.pieza7[0];
+                            tablero[3] = p4.pieza7[1];
+                        }
+                        else if (tablero[3] == p4.pieza7[1]){
+                            tablero[2] = p4.pieza7[1];
+                            tablero[3] = p4.pieza7[0];
+                        }
+                    }
+                }
+                if (p3.pieza1[0] == -2 && p3.pieza2[0] == -2 && p3.pieza3[0] == -2 && p3.pieza4[0] == -2 && p3.pieza5[0] == -2 && p3.pieza6[0] == -2 && p3.pieza7[0] == -2){
+                    menor = 14;
+                    write(pipe_p3[1], &menor, sizeof(int));
+                    write(pipe_p3[1], &menor, sizeof(int)); 
+                    write(pipe_p3[1], &menor, sizeof(int));
+                    write(pipe_p3[1], &menor, sizeof(int));       
+                }
+                else {
+                    write(pipe_p3[1], &tablero[0], sizeof(int));
+                    write(pipe_p3[1], &tablero[1], sizeof(int));
+                    write(pipe_p3[1], &tablero[2], sizeof(int));
+                    write(pipe_p3[1], &tablero[3], sizeof(int));
+                }
             }
-            else{
-                write(pipe_p3[1], &tablero[0], sizeof(int));
-                write(pipe_p3[1], &tablero[1], sizeof(int));
-                write(pipe_p3[1], &tablero[2], sizeof(int));
-                write(pipe_p3[1], &tablero[3], sizeof(int));
-            }
-            }
-
-                
-            
         }
-        //la idea es hacer pipes que comuniquen con el padre y con los hijos entre sí el read hace que esperen  
     }
     return 0;
 }
