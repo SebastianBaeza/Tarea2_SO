@@ -509,6 +509,104 @@ int main(){
             //si es la segunda jugada después de la primera pieza
             else if (tablero[2] == -1){
                 pieza = jugada(&p1,-1,tablero[1]);
+                if (pieza == 1){
+                    if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                    }
+                    else if (tablero[1] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                    }
+                }
+                if (pieza == 2){
+                    if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                    }
+                    else if (tablero[1] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                    }
+                }
+                if (pieza == 3){
+                    if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                    }
+                    else if (tablero[1] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                    }
+                }
+                if (pieza == 4){
+                    if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                    }
+                    else if (tablero[1] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                    }
+                }
+                if (pieza == 5){
+                    if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                    }
+                    else if (tablero[1] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                    }
+                }
+                if (pieza == 6){
+                    if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                    }
+                    else if (tablero[1] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                    }
+                }
+                if (pieza == 7){
+                    if (tablero[0] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[0];
+                        tablero[1] = p1.pieza1[1];
+                    }
+                    else if (tablero[1] == p1.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p1.pieza1[1];
+                        tablero[1] = p1.pieza1[0];
+                    }
+                }
                 if (pieza == 8){
                     if (tablero[1] == p1.pieza1[0]){
                         tablero[2] = p1.pieza1[0];
@@ -788,6 +886,104 @@ int main(){
             //si es la segunda jugada después de la primera pieza
             else if (tablero[2] == -1){
                 pieza = jugada(&p2,-1,tablero[1]);
+                if (pieza == 1){
+                    if (tablero[0] == p2.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza1[0];
+                        tablero[1] = p2.pieza1[1];
+                    }
+                    else if (tablero[1] == p2.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza1[1];
+                        tablero[1] = p2.pieza1[0];
+                    }
+                }
+                if (pieza == 2){
+                    if (tablero[0] == p2.pieza2[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza2[0];
+                        tablero[1] = p2.pieza2[1];
+                    }
+                    else if (tablero[1] == p2.pieza2[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza2[1];
+                        tablero[1] = p2.pieza2[0];
+                    }
+                }
+                if (pieza == 3){
+                    if (tablero[0] == p2.pieza3[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza3[0];
+                        tablero[1] = p2.pieza3[1];
+                    }
+                    else if (tablero[1] == p2.pieza3[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza3[1];
+                        tablero[1] = p2.pieza3[0];
+                    }
+                }
+                if (pieza == 4){
+                    if (tablero[0] == p2.pieza4[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza4[0];
+                        tablero[1] = p2.pieza4[1];
+                    }
+                    else if (tablero[1] == p2.pieza4[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza4[1];
+                        tablero[1] = p2.pieza4[0];
+                    }
+                }
+                if (pieza == 5){
+                    if (tablero[0] == p2.pieza5[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza5[0];
+                        tablero[1] = p2.pieza5[1];
+                    }
+                    else if (tablero[1] == p2.pieza5[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza5[1];
+                        tablero[1] = p2.pieza5[0];
+                    }
+                }
+                if (pieza == 6){
+                    if (tablero[0] == p2.pieza6[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza6[0];
+                        tablero[1] = p2.pieza6[1];
+                    }
+                    else if (tablero[1] == p2.pieza6[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza6[1];
+                        tablero[1] = p2.pieza6[0];
+                    }
+                }
+                if (pieza == 7){
+                    if (tablero[0] == p2.pieza7[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza7[0];
+                        tablero[1] = p2.pieza7[1];
+                    }
+                    else if (tablero[1] == p2.pieza7[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p2.pieza7[1];
+                        tablero[1] = p2.pieza7[0];
+                    }
+                }
                 if (pieza == 8){
                     if (tablero[1] == p2.pieza1[0]){
                         tablero[2] = p2.pieza1[0];
@@ -1061,6 +1257,104 @@ int main(){
             //si es la segunda jugada después de la primera pieza
             else if (tablero[2] == -1){
                 pieza = jugada(&p3, -1, tablero[1]);
+                if (pieza == 1){
+                    if (tablero[0] == p3.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza1[0];
+                        tablero[1] = p3.pieza1[1];
+                    }
+                    else if (tablero[1] == p3.pieza1[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza1[1];
+                        tablero[1] = p3.pieza1[0];
+                    }
+                }
+                if (pieza == 2){
+                    if (tablero[0] == p3.pieza2[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza2[0];
+                        tablero[1] = p3.pieza2[1];
+                    }
+                    else if (tablero[1] == p3.pieza2[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza2[1];
+                        tablero[1] = p3.pieza2[0];
+                    }
+                }
+                if (pieza == 3){
+                    if (tablero[0] == p3.pieza3[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza3[0];
+                        tablero[1] = p3.pieza3[1];
+                    }
+                    else if (tablero[1] == p3.pieza3[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza3[1];
+                        tablero[1] = p3.pieza3[0];
+                    }
+                }
+                if (pieza == 4){
+                    if (tablero[0] == p3.pieza4[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza4[0];
+                        tablero[1] = p3.pieza4[1];
+                    }
+                    else if (tablero[1] == p3.pieza4[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza4[1];
+                        tablero[1] = p3.pieza4[0];
+                    }
+                }
+                if (pieza == 5){
+                    if (tablero[0] == p3.pieza5[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza5[0];
+                        tablero[1] = p3.pieza5[1];
+                    }
+                    else if (tablero[1] == p3.pieza5[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza5[1];
+                        tablero[1] = p3.pieza5[0];
+                    }
+                }
+                if (pieza == 6){
+                    if (tablero[0] == p3.pieza6[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza6[0];
+                        tablero[1] = p3.pieza6[1];
+                    }
+                    else if (tablero[1] == p3.pieza6[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza6[1];
+                        tablero[1] = p3.pieza6[0];
+                    }
+                }
+                if (pieza == 7){
+                    if (tablero[0] == p3.pieza7[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza7[0];
+                        tablero[1] = p3.pieza7[1];
+                    }
+                    else if (tablero[1] == p3.pieza7[1]){
+                        tablero[2] = tablero[0];
+                        tablero[3] = tablero[1];
+                        tablero[0] = p3.pieza7[1];
+                        tablero[1] = p3.pieza7[0];
+                    }
+                }
                 if (pieza == 8){
                     if (tablero[1] == p3.pieza1[0]){
                         tablero[2] = p3.pieza1[0];
