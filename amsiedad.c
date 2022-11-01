@@ -305,15 +305,15 @@ int main(){
     crear_piezas(&p1, pos1);
 
     int pos2[7];
-    memcpy(pos2,pos + 8,sizeof(int)*7);
+    memcpy(pos2,pos + 7,sizeof(int)*7);
     crear_piezas(&p2, pos2);
 
     int pos3[7];
-    memcpy(pos3,pos + 15,sizeof(int)*7);
+    memcpy(pos3,pos + 14,sizeof(int)*7);
     crear_piezas(&p3, pos3);
 
     int pos4[7];
-    memcpy(pos4,pos + 22,sizeof(int)*7);
+    memcpy(pos4,pos + 21,sizeof(int)*7);
     crear_piezas(&p4, pos4);
 
     // hago los procesos$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -1278,14 +1278,6 @@ int main(){
 
            
         } if (proceso == 1){
- /*           printf("Creado el mazo del Jugador 2\n");
-            printf("%d, %d\n", p2.pieza1[0], p2.pieza1[1]);
-            printf("%d, %d\n", p2.pieza2[0], p2.pieza2[1]);
-            printf("%d, %d\n", p2.pieza3[0], p2.pieza3[1]);
-            printf("%d, %d\n", p2.pieza4[0], p2.pieza4[1]);
-            printf("%d, %d\n", p2.pieza5[0], p2.pieza5[1]);
-            printf("%d, %d\n", p2.pieza6[0], p2.pieza6[1]);
-            printf("%d, %d\n", p2.pieza7[0], p2.pieza7[1]);*/
             read(pipe_1p[0], &tablero[0], sizeof(int));
             read(pipe_1p[0], &tablero[1], sizeof(int));
             read(pipe_1p[0], &tablero[2], sizeof(int));
@@ -2451,7 +2443,6 @@ int main(){
             }
             //si es la segunda jugada después de la primera pieza
             else if(tablero[2]==-1){
-                if (pieza==-1)
                 if(sentido==0){
                     if (pieza==1){
                         if (tablero[0]==p4.pieza1[0]){
